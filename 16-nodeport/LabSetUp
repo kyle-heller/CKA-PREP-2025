@@ -1,0 +1,32 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[INFO] Creating namespace relative..."
+kubectl create namespace relative --dry-run=client -o yaml | kubectl apply -f -
+
+echo "[INFO] Creating nodeport-deployment (no containerPort defined)..."
+kubectl create deployment nodeport-deployment -n relative \
+  --image=nginx --replicas=2 2>/dev/null || \
+kubectl apply -f - <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeport-deployment
+  namespace: relative
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nodeport-deployment
+  template:
+    metadata:
+      labels:
+        app: nodeport-deployment
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+EOF
+
+echo "[DONE] Lab setup complete — nodeport-deployment in relative namespace"
+echo "       Add containerPort 80 to deployment, create NodePort service on 30080"

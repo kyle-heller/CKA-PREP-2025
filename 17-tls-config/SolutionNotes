@@ -1,0 +1,19 @@
+# Solution: Q17 — TLS Configuration
+#
+# Step 1: Edit ConfigMap to remove TLSv1.2
+kubectl get configmap nginx-config -n nginx-static -o yaml | \
+  sed 's/ssl_protocols TLSv1.2 TLSv1.3;/ssl_protocols TLSv1.3;/' | \
+  kubectl apply -f -
+
+# Step 2: Get service IP and add to /etc/hosts
+SVC_IP=$(kubectl get svc nginx-static -n nginx-static -o jsonpath='{.spec.clusterIP}')
+echo "$SVC_IP ckaquestion.k8s.local" >> /etc/hosts
+cat /etc/hosts | tail -5
+
+# Step 3: Restart deployment to pick up new ConfigMap
+kubectl rollout restart -n nginx-static deployment nginx-static
+kubectl rollout status -n nginx-static deployment nginx-static
+
+# Step 4: Verify
+curl -vk --tls-max 1.2 https://ckaquestion.k8s.local 2>&1 | grep 'alert'  # should fail
+curl -vk --tlsv1.3 https://ckaquestion.k8s.local                           # should work

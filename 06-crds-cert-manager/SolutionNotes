@@ -1,0 +1,9 @@
+# Solution: Q06 — CRDs (cert-manager)
+#
+# Step 1: List cert-manager CRDs
+kubectl get crd | grep cert-manager > /root/resources.yaml
+cat /root/resources.yaml
+
+# Step 2: Extract subject documentation for Certificate CRD
+kubectl explain certificate.spec.subject > /root/subject.yaml
+cat /root/subject.yaml

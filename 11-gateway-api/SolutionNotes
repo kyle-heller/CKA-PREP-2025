@@ -1,0 +1,48 @@
+# Solution: Q11 — Gateway API
+#
+# Step 1: Inspect existing Ingress
+kubectl describe ingress web
+
+# Step 2: Create Gateway
+cat <<'EOF' | kubectl apply -f -
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: web-gateway
+spec:
+  gatewayClassName: nginx-class
+  listeners:
+  - name: https
+    protocol: HTTPS
+    port: 443
+    hostname: gateway.web.k8s.local
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: web-tls
+EOF
+
+# Step 3: Create HTTPRoute
+cat <<'EOF' | kubectl apply -f -
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: web-route
+spec:
+  parentRefs:
+  - name: web-gateway
+  hostnames:
+  - "gateway.web.k8s.local"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: web-service
+      port: 80
+EOF
+
+# Step 4: Verify
+kubectl get gateway,httproute

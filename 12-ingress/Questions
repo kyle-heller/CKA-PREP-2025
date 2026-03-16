@@ -1,0 +1,10 @@
+# Question: Ingress
+#
+# Tasks:
+# 1. Expose the existing deployment "echo" with a service called "echo-service"
+#    using Service Port 8080, type=NodePort
+# 2. Create a new Ingress resource named "echo" in the echo-sound namespace
+#    for http://example.org/echo
+# 3. Verify the service is accessible: curl NODEIP:NODEPORT/echo
+#
+# Video Link: https://youtu.be/sy9zABvDedQ

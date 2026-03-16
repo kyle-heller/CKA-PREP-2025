@@ -1,0 +1,17 @@
+# Question: CNI & Network Policy
+#
+# Install and configure a CNI of your choice that meets the specified requirements.
+# Choose one of the following:
+#
+# - Flannel (v0.26.1) using kube-flannel.yml
+#   https://github.com/flannel-io/flannel/releases/download/v0.26.1/kube-flannel.yml
+#
+# - Calico (v3.28.2) using tigera-operator.yaml
+#   https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/tigera-operator.yaml
+#
+# Requirements:
+# 1. Pods must be able to communicate with each other
+# 2. Must support network policy enforcement
+# 3. Install from manifest
+#
+# Video Link: https://youtu.be/Uc04Ui4x3EM

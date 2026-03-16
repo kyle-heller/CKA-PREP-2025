@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[INFO] Downloading cri-dockerd .deb package to /root/..."
+wget -q https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.20/cri-dockerd_0.3.20.3-0.debian-bullseye_amd64.deb \
+  -O /root/cri-dockerd.deb 2>/dev/null || {
+  echo "[WARN] Download failed — creating placeholder .deb"
+  touch /root/cri-dockerd.deb
+}
+
+echo "[DONE] Lab setup complete — cri-dockerd.deb in /root/"
+echo "       Install with dpkg, enable service, configure sysctl"

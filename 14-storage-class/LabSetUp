@@ -1,0 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[INFO] No additional setup needed — bare cluster with default StorageClass"
+echo "[DONE] Lab setup complete"
+echo "       Create SC local-storage, make it default, ensure only one default SC"

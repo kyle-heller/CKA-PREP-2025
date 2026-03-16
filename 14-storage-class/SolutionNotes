@@ -1,0 +1,24 @@
+# Solution: Q14 — StorageClass
+#
+# Step 1: Create StorageClass (not default yet)
+cat <<'EOF' | kubectl apply -f -
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "false"
+provisioner: rancher.io/local-path
+volumeBindingMode: WaitForFirstConsumer
+EOF
+
+# Step 2: Make it default
+kubectl patch storageclass local-storage -p \
+  '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
+# Step 3: Remove default from old SC (typically local-path on KillerCoda)
+kubectl patch storageclass local-path -p \
+  '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}' 2>/dev/null || true
+
+# Step 4: Verify
+kubectl get sc

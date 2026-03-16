@@ -1,0 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[INFO] No additional setup needed — KillerCoda provides Cilium CNI by default"
+echo "[INFO] If running on a bare cluster without CNI, this question requires CNI installation"
+echo "[DONE] Lab setup complete"

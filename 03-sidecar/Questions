@@ -1,0 +1,13 @@
+# Question: Sidecar Container
+#
+# Update the existing wordpress deployment adding a sidecar container to the
+# existing pod.
+#
+# Tasks:
+# 1. Add a sidecar container named "sidecar" using the busybox:stable image
+# 2. The sidecar container must run the command:
+#    /bin/sh -c "tail -f /var/log/wordpress.log"
+# 3. Use a volume mounted at /var/log to make the log file wordpress.log
+#    available to the co-located sidecar container
+#
+# Video Link: https://youtu.be/3xraEGGQJDY

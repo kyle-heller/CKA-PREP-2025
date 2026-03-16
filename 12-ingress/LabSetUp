@@ -1,0 +1,31 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[INFO] Creating namespace echo-sound..."
+kubectl create ns echo-sound --dry-run=client -o yaml | kubectl apply -f -
+
+echo "[INFO] Deploying echo server..."
+kubectl apply -n echo-sound -f - <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo
+  template:
+    metadata:
+      labels:
+        app: echo
+    spec:
+      containers:
+      - name: echo
+        image: gcr.io/google_containers/echoserver:1.10
+        ports:
+        - containerPort: 8080
+EOF
+
+echo "[DONE] Lab setup complete — echo deployment in echo-sound namespace"
+echo "       Create NodePort service echo-service and Ingress for example.org/echo"

@@ -1,0 +1,13 @@
+# Solution: Q13 — Network Policy
+#
+# Compare the three policies:
+# - policy-x (policy-1): allows ALL ingress — too permissive
+# - policy-y (policy-2): allows frontend NS + IP block — extra IP range is unnecessary
+# - policy-z (policy-3): allows frontend NS + frontend pods only — least permissive
+
+# Apply the correct policy
+kubectl apply -f /root/network-policies/network-policy-3.yaml
+
+# Verify
+kubectl get networkpolicy -n backend
+kubectl describe networkpolicy policy-z -n backend

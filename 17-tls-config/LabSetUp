@@ -1,0 +1,78 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[INFO] Creating namespace nginx-static..."
+kubectl create namespace nginx-static --dry-run=client -o yaml | kubectl apply -f -
+
+echo "[INFO] Creating TLS certificate and secret..."
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /tmp/tls.key -out /tmp/tls.crt \
+  -subj "/CN=ckaquestion.k8s.local" >/dev/null 2>&1
+kubectl -n nginx-static create secret tls nginx-tls \
+  --cert=/tmp/tls.crt --key=/tmp/tls.key 2>/dev/null || true
+rm -f /tmp/tls.crt /tmp/tls.key
+
+echo "[INFO] Creating ConfigMap with TLSv1.2 AND TLSv1.3 (misconfigured)..."
+kubectl apply -n nginx-static -f - <<'EOF'
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    events {}
+    http {
+      server {
+        listen 443 ssl;
+        ssl_certificate /etc/nginx/tls/tls.crt;
+        ssl_certificate_key /etc/nginx/tls/tls.key;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        location / {
+          return 200 "Hello TLS\n";
+        }
+      }
+    }
+EOF
+
+echo "[INFO] Deploying nginx with TLS..."
+kubectl apply -n nginx-static -f - <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-static
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-static
+  template:
+    metadata:
+      labels:
+        app: nginx-static
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        - name: tls
+          mountPath: /etc/nginx/tls
+      volumes:
+      - name: config
+        configMap:
+          name: nginx-config
+      - name: tls
+        secret:
+          secretName: nginx-tls
+EOF
+
+echo "[INFO] Creating ClusterIP service..."
+kubectl -n nginx-static expose deployment nginx-static \
+  --port=443 --target-port=443 --name=nginx-static 2>/dev/null || true
+
+echo "[DONE] Lab setup complete — nginx with TLSv1.2+TLSv1.3 in nginx-static namespace"
+echo "       Remove TLSv1.2 from ConfigMap, add /etc/hosts entry, restart deployment"

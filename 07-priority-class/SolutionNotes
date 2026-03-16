@@ -1,0 +1,15 @@
+# Solution: Q07 — PriorityClass
+#
+# Step 1: Check existing PriorityClasses
+kubectl get priorityclass  # user-critical has value 1000
+
+# Step 2: Create high-priority (999 = one less than highest user-defined)
+kubectl create priorityclass high-priority --value=999 --description="high priority"
+
+# Step 3: Patch deployment
+kubectl patch deployment busybox-logger -n priority \
+  -p '{"spec":{"template":{"spec":{"priorityClassName":"high-priority"}}}}'
+
+# Step 4: Verify
+kubectl get pc
+kubectl describe deployment busybox-logger -n priority | grep -i "priority"

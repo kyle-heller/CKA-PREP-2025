@@ -1,0 +1,9 @@
+# Question: Taints & Tolerations
+#
+# Tasks:
+# 1. Add a taint to node01 so that no normal pods can be scheduled on it:
+#    key=PERMISSION, value=granted, effect=NoSchedule
+# 2. Schedule a Pod named "nginx" on node01 by adding the correct toleration
+#    to the spec so it can be deployed
+#
+# Video Link: https://youtu.be/oy6Mdqt1-jk

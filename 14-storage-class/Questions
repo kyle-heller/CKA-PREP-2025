@@ -1,0 +1,11 @@
+# Question: StorageClass
+#
+# Tasks:
+# 1. Create a new StorageClass named "local-storage" with provisioner
+#    rancher.io/local-path. Set VolumeBindingMode to WaitForFirstConsumer.
+#    Do not make it default initially.
+# 2. Patch the StorageClass to make it the default StorageClass
+# 3. Ensure local-storage is the only default class
+# 4. Do not modify any existing Deployments or PersistentVolumeClaims
+#
+# Video Link: https://youtu.be/di7X7OHn2fc

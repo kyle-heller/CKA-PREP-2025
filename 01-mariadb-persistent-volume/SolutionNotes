@@ -1,0 +1,27 @@
+# Solution: Q01 — MariaDB Persistent Volume
+#
+# Step 1: Create PVC
+cat <<'EOF' > pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb
+  namespace: mariadb
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 250Mi
+EOF
+kubectl apply -f pvc.yaml
+kubectl get pvc mariadb -n mariadb    # should be Bound
+kubectl get pv mariadb-pv             # should show Bound to mariadb/mariadb
+
+# Step 2: Fix deployment manifest and apply
+sed -i 's/claimName: ""/claimName: "mariadb"/' ~/mariadb-deploy.yaml
+kubectl apply -f ~/mariadb-deploy.yaml
+
+# Step 3: Verify
+kubectl rollout status deployment mariadb -n mariadb
+kubectl get pods -n mariadb

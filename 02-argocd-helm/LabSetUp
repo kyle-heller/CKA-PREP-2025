@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[INFO] Creating namespace argocd..."
+kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+
+echo "[INFO] Removing any existing /root/argo-helm.yaml..."
+rm -f /root/argo-helm.yaml
+
+echo "[DONE] Lab setup complete — namespace argocd ready"
+echo "       Helm must be installed (run scripts/setup-tools.sh if needed)"

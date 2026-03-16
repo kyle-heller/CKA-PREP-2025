@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[INFO] Removing any stale PERMISSION taint from node01..."
+kubectl taint nodes node01 PERMISSION=granted:NoSchedule- 2>/dev/null || true
+
+echo "[INFO] Cleaning up any existing nginx pod..."
+kubectl delete pod nginx --ignore-not-found 2>/dev/null || true
+
+echo "[DONE] Lab setup complete — node01 ready for taint exercise"
+echo "       Taint node01 with PERMISSION=granted:NoSchedule, create tolerating pod"

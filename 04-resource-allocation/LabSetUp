@@ -1,0 +1,35 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[INFO] Creating WordPress deployment with 3 replicas and init container (no resources)..."
+kubectl apply -f - <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      initContainers:
+      - name: init-setup
+        image: busybox
+        command: ["sh", "-c", "echo 'Preparing environment...' && sleep 5"]
+      containers:
+      - name: wordpress
+        image: wordpress:6.2-apache
+        ports:
+        - containerPort: 80
+EOF
+
+echo "[INFO] Waiting for rollout..."
+kubectl rollout status deployment wordpress --timeout=120s || true
+
+echo "[DONE] Lab setup complete — wordpress deployment with 3 replicas, no resource limits"
+echo "       Scale to 0, add resources to init+main containers, scale back to 3"

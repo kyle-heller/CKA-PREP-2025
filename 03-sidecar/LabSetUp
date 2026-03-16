@@ -1,0 +1,45 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[INFO] Creating WordPress deployment (single container, no shared volume)..."
+kubectl apply -f - <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - name: wordpress
+        image: wordpress:php8.2-apache
+        command: ["/bin/sh", "-c", "while true; do echo 'WordPress is running...' >> /var/log/wordpress.log; sleep 5; done"]
+        ports:
+        - containerPort: 80
+EOF
+
+echo "[INFO] Creating WordPress service..."
+kubectl apply -f - <<'EOF'
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress
+spec:
+  selector:
+    app: wordpress
+  ports:
+  - port: 80
+    targetPort: 80
+EOF
+
+echo "[DONE] Lab setup complete — wordpress deployment in default namespace"
+echo "       Add sidecar container and shared emptyDir volume"

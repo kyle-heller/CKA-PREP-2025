@@ -1,0 +1,12 @@
+# Question: NodePort
+#
+# There is a deployment named nodeport-deployment in the relative namespace.
+#
+# Tasks:
+# 1. Configure the deployment so it can be exposed on port 80
+#    (name=http, protocol=TCP)
+# 2. Create a new Service named "nodeport-service" exposing container port 80,
+#    protocol TCP, NodePort 30080
+# 3. Configure the service to expose the individual pods using NodePort
+#
+# Video Link: https://youtu.be/

@@ -1,0 +1,16 @@
+# Solution: Q15 — Etcd Fix
+#
+# Step 1: Check the current etcd-servers config
+sudo grep 'etcd-servers' /etc/kubernetes/manifests/kube-apiserver.yaml
+# Should show :2380 (wrong — that's the peer port)
+
+# Step 2: Fix the port from 2380 back to 2379
+sudo sed -i 's/:2380/:2379/g' /etc/kubernetes/manifests/kube-apiserver.yaml
+
+# Step 3: Wait for API server to come back (kubelet watches manifests dir)
+echo "Waiting for API server to restart..."
+sleep 30
+kubectl get nodes  # should work now
+
+# Alternative: restore from backup
+# sudo cp /root/kube-apiserver.yaml.bak /etc/kubernetes/manifests/kube-apiserver.yaml

@@ -1,0 +1,12 @@
+# Question: Network Policy
+#
+# There are two deployments: Frontend (in frontend namespace) and Backend
+# (in backend namespace).
+#
+# Tasks:
+# 1. Look at the Network Policy YAML files in /root/network-policies/
+# 2. Decide which policy provides the functionality to allow interaction
+#    between the frontend and backend deployments in the least permissive way
+# 3. Deploy that YAML
+#
+# Video Link: https://youtu.be/rA8mXYTU0W8

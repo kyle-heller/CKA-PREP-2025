@@ -1,0 +1,10 @@
+# Solution: Q08 — CNI & Network Policy
+#
+# On KillerCoda: Cilium is already installed. Verify with:
+kubectl get nodes                            # should show Ready
+kubectl get pods -n kube-system | grep cilium
+
+# If no CNI installed, install Calico (supports NetworkPolicy):
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/tigera-operator.yaml
+kubectl get pods -n tigera-operator
+kubectl get pods -n calico-system

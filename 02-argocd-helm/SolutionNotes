@@ -1,0 +1,19 @@
+# Solution: Q02 — ArgoCD Helm
+#
+# Step 1: Create namespace
+kubectl create namespace argocd
+
+# Step 2: Add Helm repo and update
+helm repo add argocd https://argoproj.github.io/argo-helm
+helm repo update
+
+# Step 3: Generate template without CRDs
+helm template argocd argocd/argo-cd \
+  --version 7.7.3 \
+  --namespace argocd \
+  --set crds.install=false \
+  > /root/argo-helm.yaml
+
+# Step 4: Verify
+head -20 /root/argo-helm.yaml
+grep -c 'CustomResourceDefinition' /root/argo-helm.yaml  # should be 0

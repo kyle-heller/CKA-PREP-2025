@@ -1,0 +1,11 @@
+# Question: Etcd Fix
+#
+# After a cluster migration, the controlplane kube-apiserver is not coming up.
+# Before the migration, etcd was external and in HA. After migration, the
+# kube-apiserver was pointing to the etcd peer port 2380 instead of the
+# client port 2379.
+#
+# Task:
+# Fix the kube-apiserver configuration so it connects to etcd on the correct port.
+#
+# Video Link: https://youtu.be/IL448T6r8H4
