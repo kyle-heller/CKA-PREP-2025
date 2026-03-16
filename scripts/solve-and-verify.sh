@@ -122,6 +122,7 @@ metadata:
   name: mariadb
   namespace: mariadb
 spec:
+  storageClassName: ""
   accessModes:
   - ReadWriteOnce
   resources:
@@ -192,20 +193,49 @@ run_verify "$SCRIPT_DIR/03-sidecar"
 
 echo ""
 echo "━━━ Solving: 04-resource-allocation ━━━"
-kubectl scale deployment wordpress --replicas=0
+kubectl scale deployment wordpress -n resources --replicas=0
 sleep 2
-kubectl patch deployment wordpress --type='json' -p='[
-  {"op":"add","path":"/spec/template/spec/containers/0/resources","value":{
-    "requests":{"cpu":"300m","memory":"600Mi"},
-    "limits":{"cpu":"400m","memory":"700Mi"}
-  }},
-  {"op":"add","path":"/spec/template/spec/initContainers/0/resources","value":{
-    "requests":{"cpu":"300m","memory":"600Mi"},
-    "limits":{"cpu":"400m","memory":"700Mi"}
-  }}
-]'
-kubectl scale deployment wordpress --replicas=3
-kubectl rollout status deployment wordpress --timeout=120s || true
+kubectl apply -f - <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  namespace: resources
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      initContainers:
+      - name: init-setup
+        image: busybox
+        command: ["sh", "-c", "echo 'Preparing environment...' && sleep 5"]
+        resources:
+          requests:
+            cpu: 300m
+            memory: 600Mi
+          limits:
+            cpu: 400m
+            memory: 700Mi
+      containers:
+      - name: wordpress
+        image: wordpress:6.2-apache
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 300m
+            memory: 600Mi
+          limits:
+            cpu: 400m
+            memory: 700Mi
+EOF
+kubectl rollout status deployment wordpress -n resources --timeout=120s || true
 run_verify "$SCRIPT_DIR/04-resource-allocation"
 
 # ─── Q05: HPA ──────────────────────────────────────────────────────────────

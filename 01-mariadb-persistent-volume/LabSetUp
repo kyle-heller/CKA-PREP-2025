@@ -18,7 +18,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: standard
+  storageClassName: ""
   hostPath:
     path: /mnt/data/mariadb
 EOF
@@ -31,6 +31,7 @@ metadata:
   name: mariadb
   namespace: mariadb
 spec:
+  storageClassName: ""
   accessModes:
     - ReadWriteOnce
   resources:

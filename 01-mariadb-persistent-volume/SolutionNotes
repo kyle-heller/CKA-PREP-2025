@@ -8,6 +8,7 @@ metadata:
   name: mariadb
   namespace: mariadb
 spec:
+  storageClassName: ""
   accessModes:
   - ReadWriteOnce
   resources:

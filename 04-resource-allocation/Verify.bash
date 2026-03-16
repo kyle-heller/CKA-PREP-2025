@@ -5,7 +5,7 @@ PASS=true
 echo "=== Q04: Resource Allocation ==="
 
 # Check 3 replicas
-REPLICAS=$(kubectl get deployment wordpress -o jsonpath='{.spec.replicas}' 2>/dev/null)
+REPLICAS=$(kubectl get deployment wordpress -n resources -o jsonpath='{.spec.replicas}' 2>/dev/null)
 if [ "$REPLICAS" = "3" ]; then
   echo "[PASS] Deployment has 3 replicas"
 else
@@ -14,10 +14,10 @@ else
 fi
 
 # Check main container has resource requests
-MAIN_CPU_REQ=$(kubectl get deployment wordpress -o jsonpath='{.spec.template.spec.containers[0].resources.requests.cpu}' 2>/dev/null)
-MAIN_MEM_REQ=$(kubectl get deployment wordpress -o jsonpath='{.spec.template.spec.containers[0].resources.requests.memory}' 2>/dev/null)
-MAIN_CPU_LIM=$(kubectl get deployment wordpress -o jsonpath='{.spec.template.spec.containers[0].resources.limits.cpu}' 2>/dev/null)
-MAIN_MEM_LIM=$(kubectl get deployment wordpress -o jsonpath='{.spec.template.spec.containers[0].resources.limits.memory}' 2>/dev/null)
+MAIN_CPU_REQ=$(kubectl get deployment wordpress -n resources -o jsonpath='{.spec.template.spec.containers[0].resources.requests.cpu}' 2>/dev/null)
+MAIN_MEM_REQ=$(kubectl get deployment wordpress -n resources -o jsonpath='{.spec.template.spec.containers[0].resources.requests.memory}' 2>/dev/null)
+MAIN_CPU_LIM=$(kubectl get deployment wordpress -n resources -o jsonpath='{.spec.template.spec.containers[0].resources.limits.cpu}' 2>/dev/null)
+MAIN_MEM_LIM=$(kubectl get deployment wordpress -n resources -o jsonpath='{.spec.template.spec.containers[0].resources.limits.memory}' 2>/dev/null)
 
 if [ -n "$MAIN_CPU_REQ" ] && [ -n "$MAIN_MEM_REQ" ]; then
   echo "[PASS] Main container has resource requests (cpu: $MAIN_CPU_REQ, memory: $MAIN_MEM_REQ)"
@@ -34,10 +34,10 @@ else
 fi
 
 # Check init container has resource requests
-INIT_CPU_REQ=$(kubectl get deployment wordpress -o jsonpath='{.spec.template.spec.initContainers[0].resources.requests.cpu}' 2>/dev/null)
-INIT_MEM_REQ=$(kubectl get deployment wordpress -o jsonpath='{.spec.template.spec.initContainers[0].resources.requests.memory}' 2>/dev/null)
-INIT_CPU_LIM=$(kubectl get deployment wordpress -o jsonpath='{.spec.template.spec.initContainers[0].resources.limits.cpu}' 2>/dev/null)
-INIT_MEM_LIM=$(kubectl get deployment wordpress -o jsonpath='{.spec.template.spec.initContainers[0].resources.limits.memory}' 2>/dev/null)
+INIT_CPU_REQ=$(kubectl get deployment wordpress -n resources -o jsonpath='{.spec.template.spec.initContainers[0].resources.requests.cpu}' 2>/dev/null)
+INIT_MEM_REQ=$(kubectl get deployment wordpress -n resources -o jsonpath='{.spec.template.spec.initContainers[0].resources.requests.memory}' 2>/dev/null)
+INIT_CPU_LIM=$(kubectl get deployment wordpress -n resources -o jsonpath='{.spec.template.spec.initContainers[0].resources.limits.cpu}' 2>/dev/null)
+INIT_MEM_LIM=$(kubectl get deployment wordpress -n resources -o jsonpath='{.spec.template.spec.initContainers[0].resources.limits.memory}' 2>/dev/null)
 
 if [ -n "$INIT_CPU_REQ" ] && [ -n "$INIT_MEM_REQ" ]; then
   echo "[PASS] Init container has resource requests (cpu: $INIT_CPU_REQ, memory: $INIT_MEM_REQ)"

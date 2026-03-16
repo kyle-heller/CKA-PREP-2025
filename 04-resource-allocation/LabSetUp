@@ -1,12 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
+echo "[INFO] Creating namespace resources..."
+kubectl create namespace resources --dry-run=client -o yaml | kubectl apply -f -
+
 echo "[INFO] Creating WordPress deployment with 3 replicas and init container (no resources)..."
 kubectl apply -f - <<'EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: wordpress
+  namespace: resources
 spec:
   replicas: 3
   selector:
@@ -29,7 +33,7 @@ spec:
 EOF
 
 echo "[INFO] Waiting for rollout..."
-kubectl rollout status deployment wordpress --timeout=120s || true
+kubectl rollout status deployment wordpress -n resources --timeout=120s || true
 
-echo "[DONE] Lab setup complete — wordpress deployment with 3 replicas, no resource limits"
+echo "[DONE] Lab setup complete — wordpress deployment in resources namespace, no resource limits"
 echo "       Scale to 0, add resources to init+main containers, scale back to 3"
