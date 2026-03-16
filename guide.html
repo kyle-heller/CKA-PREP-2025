@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CKA Audio Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0d0d0d;
+  --surface: #141414;
+  --border:  #222;
+  --dim:     #333;
+  --muted:   #555;
+  --text:    #c8c8c8;
+  --bright:  #e8e8e8;
+  --green:   #4ade80;
+  --red:     #f87171;
+  --amber:   #fbbf24;
+  --blue:    #60a5fa;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── HEADER ────────────────────────────────────── */
+#header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+#header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#header h1 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 1px;
+}
+
+#question-info {
+  font-size: 13px;
+  color: var(--text);
+}
+
+#question-info .q-num { color: var(--amber); font-weight: 600; }
+#question-info .q-title { color: var(--bright); }
+
+.badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.badge-easy { background: #16a34a22; color: var(--green); border: 1px solid #16a34a44; }
+.badge-medium { background: #d9770622; color: var(--amber); border: 1px solid #d9770644; }
+.badge-hard { background: #dc262622; color: var(--red); border: 1px solid #dc262644; }
+
+#nav-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+#nav-buttons button {
+  background: var(--dim);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+#nav-buttons button:hover { background: var(--muted); color: var(--bright); }
+#nav-buttons button:disabled { opacity: 0.3; cursor: default; }
+
+/* ── CONTENT ───────────────────────────────────── */
+#content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px 100px;
+  scroll-behavior: smooth;
+}
+
+.section-header {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 28px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.section-header:first-child { margin-top: 0; }
+
+/* TTS narration lines */
+.tts-line {
+  display: block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.tts-reading .tts-line { opacity: 0.45; }
+.tts-reading .tts-line.tts-line-active {
+  opacity: 1;
+  color: var(--amber);
+  background: #fbbf2410;
+}
+
+.tts-line:hover { opacity: 0.9; background: #ffffff06; }
+
+/* Code blocks */
+.code-block {
+  background: #1a1a2e;
+  border-left: 3px solid var(--green);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: #a8d8a8;
+}
+
+/* ── CONTROLS BAR ──────────────────────────────── */
+#controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+#controls-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#controls-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#controls-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ctrl-btn {
+  background: var(--dim);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ctrl-btn:hover { background: var(--muted); color: var(--bright); }
+.ctrl-btn.active { background: var(--green); color: var(--bg); border-color: var(--green); }
+
+.section-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.section-btn:hover { color: var(--text); border-color: var(--muted); }
+.section-btn.active { color: var(--amber); border-color: var(--amber); }
+
+.speed-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+.speed-btn:hover { color: var(--text); }
+.speed-btn.active { color: var(--amber); font-weight: 600; }
+
+/* Scrollbar */
+#content::-webkit-scrollbar { width: 6px; }
+#content::-webkit-scrollbar-track { background: var(--bg); }
+#content::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 3px; }
+#content::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* Keyboard hints */
+.kbd {
+  font-size: 10px;
+  color: var(--dim);
+  padding: 1px 4px;
+  border: 1px solid var(--dim);
+  border-radius: 3px;
+  margin-left: 4px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div id="header-left">
+    <h1>CKA Audio Guide</h1>
+    <span id="question-info"></span>
+  </div>
+  <div id="nav-buttons">
+    <button id="btn-prev" onclick="prevQuestion()">&lt;&lt; prev</button>
+    <button id="btn-next" onclick="nextQuestion()">next &gt;&gt;</button>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div id="content"></div>
+
+<!-- CONTROLS -->
+<div id="controls">
+  <div id="controls-left">
+    <button class="ctrl-btn" id="btn-play" onclick="togglePlay()">&#9654; play</button>
+    <button class="ctrl-btn" id="btn-stop" onclick="stopTTS()">&#9632; stop</button>
+  </div>
+  <div id="controls-center">
+    <button class="section-btn" id="sec-scenario" onclick="jumpSection('scenario')">Scenario<span class="kbd">1</span></button>
+    <button class="section-btn" id="sec-concepts" onclick="jumpSection('concepts')">Concepts<span class="kbd">2</span></button>
+    <button class="section-btn" id="sec-solution" onclick="jumpSection('solution')">Solution<span class="kbd">3</span></button>
+  </div>
+  <div id="controls-right">
+    <span>
+      <button class="speed-btn" onclick="setSpeed(0.8)">0.8x</button>
+      <button class="speed-btn active" id="speed-current" onclick="setSpeed(1.0)">1.0x</button>
+      <button class="speed-btn" onclick="setSpeed(1.2)">1.2x</button>
+    </span>
+    <span id="line-progress">line 0/0</span>
+  </div>
+</div>
+
+<script>
+// ── QUESTIONS DATA ─────────────────────────────────────────────
+const QUESTIONS = [
+  // ── Q1: MariaDB Persistent Volume ──
+  {
+    id: 1, title: "MariaDB Persistent Volume", difficulty: "Medium",
+    scenario: [
+      { type: "narration", text: "A user accidentally deleted the MariaDB Deployment in the mariadb namespace." },
+      { type: "narration", text: "The deployment was configured with persistent storage." },
+      { type: "narration", text: "Your job is to re-establish the deployment while preserving data by reusing the available PersistentVolume." },
+      { type: "narration", text: "A PersistentVolume already exists and is retained for reuse. Only one PV exists in the cluster." },
+      { type: "narration", text: "You need to create a PVC named mariadb, fix the deployment manifest, and apply it." },
+    ],
+    concepts: [
+      { type: "narration", text: "This question tests PersistentVolumes and PersistentVolumeClaims, which are core storage concepts in Kubernetes." },
+      { type: "narration", text: "A PersistentVolume is a cluster-level storage resource. A PersistentVolumeClaim is a namespace-level request for storage." },
+      { type: "narration", text: "When a PV has a Retain reclaim policy, deleting the PVC does not delete the underlying data." },
+      { type: "narration", text: "The key gotcha here is setting storageClassName to an empty string. This tells Kubernetes to bind to an existing PV without a storage class, rather than provisioning a new one." },
+      { type: "narration", text: "If you forget the empty storageClassName, the PVC might bind to the default storage class and provision a brand new volume, losing access to the old data." },
+      { type: "narration", text: "On the exam, always check the existing PV first with kubectl get pv to understand its capacity, access modes, and current status." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Create the PersistentVolumeClaim. Note the empty storageClassName." },
+      { type: "code", text: "cat <<'EOF' > pvc.yaml\napiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: mariadb\n  namespace: mariadb\nspec:\n  storageClassName: \"\"\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 250Mi\nEOF\nkubectl apply -f pvc.yaml" },
+      { type: "narration", text: "Step two. Verify the PVC is bound to the existing PV." },
+      { type: "code", text: "kubectl get pvc mariadb -n mariadb\nkubectl get pv" },
+      { type: "narration", text: "Step three. Fix the deployment manifest by filling in the claimName, then apply it." },
+      { type: "code", text: "sed -i 's/claimName: \"\"/claimName: \"mariadb\"/' ~/mariadb-deploy.yaml\nkubectl apply -f ~/mariadb-deploy.yaml" },
+      { type: "narration", text: "Step four. Verify the deployment is running and the pod is healthy." },
+      { type: "code", text: "kubectl rollout status deployment mariadb -n mariadb\nkubectl get pods -n mariadb" },
+    ],
+  },
+
+  // ── Q2: ArgoCD Helm ──
+  {
+    id: 2, title: "ArgoCD Helm (No CRDs)", difficulty: "Easy",
+    scenario: [
+      { type: "narration", text: "Install Argo CD in a Kubernetes cluster using Helm." },
+      { type: "narration", text: "The CRDs are already pre-installed, so you must ensure Helm does not install them again." },
+      { type: "narration", text: "Add the official Argo CD Helm repo, generate a template from chart version 7.7.3, and save the output." },
+      { type: "narration", text: "The generated YAML manifest must be saved to /root/argo-helm.yaml." },
+    ],
+    concepts: [
+      { type: "narration", text: "This question tests your ability to use Helm template, not Helm install. The difference matters." },
+      { type: "narration", text: "Helm template renders the chart locally into plain YAML without talking to the cluster. Helm install actually deploys resources." },
+      { type: "narration", text: "The key value to set is crds.install=false. This tells the Argo CD chart to skip CRD manifests in the output." },
+      { type: "narration", text: "On the exam, pay close attention to whether they ask for helm template or helm install. They are very different operations." },
+      { type: "narration", text: "Always run helm repo update after adding a repo, or you may get stale chart versions." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Create the argocd namespace." },
+      { type: "code", text: "kubectl create namespace argocd" },
+      { type: "narration", text: "Step two. Add the Helm repo and update." },
+      { type: "code", text: "helm repo add argocd https://argoproj.github.io/argo-helm\nhelm repo update" },
+      { type: "narration", text: "Step three. Generate the template with CRDs disabled and save it." },
+      { type: "code", text: "helm template argocd argocd/argo-cd \\\n  --version 7.7.3 \\\n  --namespace argocd \\\n  --set crds.install=false \\\n  > /root/argo-helm.yaml" },
+      { type: "narration", text: "Step four. Verify no CRDs were included in the output." },
+      { type: "code", text: "grep -c 'CustomResourceDefinition' /root/argo-helm.yaml\n# should output 0" },
+    ],
+  },
+
+  // ── Q3: Sidecar Container ──
+  {
+    id: 3, title: "Sidecar Container", difficulty: "Easy",
+    scenario: [
+      { type: "narration", text: "There is an existing WordPress deployment that needs a sidecar container." },
+      { type: "narration", text: "Add a sidecar container named sidecar using the busybox stable image." },
+      { type: "narration", text: "The sidecar must tail the log file at /var/log/wordpress.log." },
+      { type: "narration", text: "Use a shared volume so both containers can access the same /var/log directory." },
+    ],
+    concepts: [
+      { type: "narration", text: "A sidecar is a helper container that runs alongside the main container in the same pod." },
+      { type: "narration", text: "The critical concept here is shared volumes. Containers in the same pod can share data through a volume mounted in both containers." },
+      { type: "narration", text: "An emptyDir volume is the simplest choice for sidecars. It's created when the pod starts and deleted when the pod is removed." },
+      { type: "narration", text: "On the exam, make sure both containers mount the same volume name at the correct path. A common mistake is forgetting the volumeMounts in one of the containers." },
+      { type: "narration", text: "The command format for busybox uses an array syntax. The command is /bin/sh with -c flag and the actual command as a string argument." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Edit the WordPress deployment to add an emptyDir volume and the sidecar container." },
+      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: wordpress\nspec:\n  template:\n    spec:\n      volumes:\n      - name: log\n        emptyDir: {}\n      containers:\n      - name: wordpress\n        volumeMounts:\n        - name: log\n          mountPath: /var/log\n      - name: sidecar\n        image: busybox:stable\n        command: [\"/bin/sh\", \"-c\", \"tail -f /var/log/wordpress.log\"]\n        volumeMounts:\n        - name: log\n          mountPath: /var/log\nEOF" },
+      { type: "narration", text: "Step two. Verify the deployment rolls out and both containers are running." },
+      { type: "code", text: "kubectl rollout status deployment wordpress\nkubectl get pods -l app=wordpress" },
+    ],
+  },
+
+  // ── Q4: Resource Allocation ──
+  {
+    id: 4, title: "Resource Allocation", difficulty: "Medium",
+    scenario: [
+      { type: "narration", text: "You are managing a WordPress application in the resources namespace." },
+      { type: "narration", text: "The deployment currently has 3 replicas but resources are not properly configured." },
+      { type: "narration", text: "You need to scale down to zero, divide node resources evenly across all 3 pods, then scale back up." },
+      { type: "narration", text: "Both init containers and main containers must use exactly the same resource requests and limits." },
+    ],
+    concepts: [
+      { type: "narration", text: "This question tests resource requests and limits, which are how Kubernetes manages CPU and memory allocation." },
+      { type: "narration", text: "Requests are what the scheduler guarantees. Limits are the maximum a container can use before it gets throttled or OOM-killed." },
+      { type: "narration", text: "The tricky part is figuring out the right values. You need to check the node's allocatable resources and divide by 3." },
+      { type: "narration", text: "Use kubectl describe node to find allocatable CPU and memory. Then leave some overhead for system pods." },
+      { type: "narration", text: "A common exam mistake is forgetting init containers. The question explicitly says init and main containers must have the same resources." },
+      { type: "narration", text: "Scale down first to avoid scheduling failures while you're editing the resource values." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Scale the deployment down to zero replicas." },
+      { type: "code", text: "kubectl scale deployment wordpress -n resources --replicas=0" },
+      { type: "narration", text: "Step two. Check the node's allocatable resources to calculate per-pod values." },
+      { type: "code", text: "kubectl describe node | grep -A 5 Allocatable" },
+      { type: "narration", text: "Step three. Edit the deployment. Set the same resource block on every container, including init containers." },
+      { type: "code", text: "kubectl edit deployment wordpress -n resources\n# Set on ALL containers and initContainers:\n# resources:\n#   requests:\n#     cpu: \"300m\"\n#     memory: \"600Mi\"\n#   limits:\n#     cpu: \"400m\"\n#     memory: \"700Mi\"" },
+      { type: "narration", text: "Step four. Scale back up and verify all 3 pods are running." },
+      { type: "code", text: "kubectl scale deployment wordpress -n resources --replicas=3\nkubectl rollout status deployment wordpress -n resources\nkubectl get pods -n resources" },
+    ],
+  },
+
+  // ── Q5: HPA ──
+  {
+    id: 5, title: "HorizontalPodAutoscaler", difficulty: "Medium",
+    scenario: [
+      { type: "narration", text: "Create a new HorizontalPodAutoscaler named apache-server in the autoscale namespace." },
+      { type: "narration", text: "Target the existing apache-deployment with 50% CPU utilization." },
+      { type: "narration", text: "Configure minimum 1 pod and maximum 4 pods." },
+      { type: "narration", text: "Set the downscale stabilization window to 30 seconds." },
+    ],
+    concepts: [
+      { type: "narration", text: "An HPA automatically scales the number of pod replicas based on observed metrics like CPU utilization." },
+      { type: "narration", text: "The autoscaling/v2 API is the current version. The older v1 API does not support behavior configuration." },
+      { type: "narration", text: "The downscale stabilization window prevents rapid scale-down. It says: wait this many seconds before removing pods, even if the metric is below target." },
+      { type: "narration", text: "On the exam, you need the metrics-server running for HPA to work. It's usually pre-installed." },
+      { type: "narration", text: "A common mistake is using the wrong API version. If the question asks for behavior configuration, you must use autoscaling/v2." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Create the HPA manifest using the autoscaling v2 API." },
+      { type: "code", text: "cat <<'EOF' > hpa.yaml\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: apache-server\n  namespace: autoscale\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: apache-deployment\n  minReplicas: 1\n  maxReplicas: 4\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 50\n  behavior:\n    scaleDown:\n      stabilizationWindowSeconds: 30\nEOF\nkubectl apply -f hpa.yaml" },
+      { type: "narration", text: "Step two. Verify the HPA is created and targeting the correct deployment." },
+      { type: "code", text: "kubectl get hpa -n autoscale\nkubectl describe hpa apache-server -n autoscale" },
+    ],
+  },
+
+  // ── Q6: CRDs (cert-manager) ──
+  {
+    id: 6, title: "CRDs (cert-manager)", difficulty: "Easy",
+    scenario: [
+      { type: "narration", text: "Cert-manager CRDs are already installed in the cluster." },
+      { type: "narration", text: "List all cert-manager CRDs and save them to /root/resources.yaml." },
+      { type: "narration", text: "Then extract the documentation for the subject field of the Certificate Custom Resource." },
+      { type: "narration", text: "Save that documentation to /root/subject.yaml." },
+    ],
+    concepts: [
+      { type: "narration", text: "CRDs, or Custom Resource Definitions, extend the Kubernetes API with new resource types." },
+      { type: "narration", text: "kubectl explain is the key command here. It works on CRDs just like built-in resources." },
+      { type: "narration", text: "You can drill into nested fields with dot notation. For example, certificate.spec.subject." },
+      { type: "narration", text: "On the exam, you can use kubectl get crd with grep to filter CRDs by a specific project name." },
+      { type: "narration", text: "This is a straightforward question, but read carefully whether they want just a list or full YAML output." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. List all cert-manager CRDs and save to file." },
+      { type: "code", text: "kubectl get crd | grep cert-manager > /root/resources.yaml\ncat /root/resources.yaml" },
+      { type: "narration", text: "Step two. Extract the subject field documentation using kubectl explain." },
+      { type: "code", text: "kubectl explain certificate.spec.subject > /root/subject.yaml\ncat /root/subject.yaml" },
+    ],
+  },
+
+  // ── Q7: PriorityClass ──
+  {
+    id: 7, title: "PriorityClass", difficulty: "Easy",
+    scenario: [
+      { type: "narration", text: "There is an existing deployment called busybox-logger in the priority namespace." },
+      { type: "narration", text: "The cluster already has at least one user-defined PriorityClass." },
+      { type: "narration", text: "Create a new PriorityClass named high-priority with a value exactly one less than the highest existing user-defined priority class." },
+      { type: "narration", text: "Then patch the busybox-logger deployment to use this new priority class." },
+    ],
+    concepts: [
+      { type: "narration", text: "PriorityClasses determine which pods get scheduled first when resources are scarce." },
+      { type: "narration", text: "Higher values mean higher priority. The system PriorityClasses like system-node-critical have very high values." },
+      { type: "narration", text: "The question says user-defined, so ignore the built-in system classes. Look for classes without the system prefix." },
+      { type: "narration", text: "Setting priorityClassName in the pod spec is done through the deployment template spec, not the deployment spec itself." },
+      { type: "narration", text: "On the exam, always check existing PriorityClasses first with kubectl get pc, so you know what value to use." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Check existing PriorityClasses to find the highest user-defined value." },
+      { type: "code", text: "kubectl get priorityclass" },
+      { type: "narration", text: "Step two. Create the high-priority class with value one less than the highest." },
+      { type: "code", text: "kubectl create priorityclass high-priority \\\n  --value=999 \\\n  --description=\"high priority\"" },
+      { type: "narration", text: "Step three. Patch the deployment to use the new priority class." },
+      { type: "code", text: "kubectl patch deployment busybox-logger -n priority \\\n  -p '{\"spec\":{\"template\":{\"spec\":{\"priorityClassName\":\"high-priority\"}}}}'" },
+      { type: "narration", text: "Step four. Verify the patch was applied." },
+      { type: "code", text: "kubectl get pc\nkubectl describe deployment busybox-logger -n priority | grep -i priority" },
+    ],
+  },
+
+  // ── Q8: CNI & Network Policy ──
+  {
+    id: 8, title: "CNI & Network Policy", difficulty: "Easy",
+    scenario: [
+      { type: "narration", text: "Install and configure a Container Network Interface plugin that meets the cluster requirements." },
+      { type: "narration", text: "Pods must be able to communicate with each other." },
+      { type: "narration", text: "The CNI must support Network Policy enforcement." },
+      { type: "narration", text: "You can choose between Flannel or Calico. Install from the provided manifest URL." },
+    ],
+    concepts: [
+      { type: "narration", text: "A CNI plugin provides the networking layer for pods. Without a CNI, pods cannot communicate and nodes will show as NotReady." },
+      { type: "narration", text: "Not all CNIs support NetworkPolicy. Flannel does not support it natively. Calico and Cilium do." },
+      { type: "narration", text: "Since the question requires NetworkPolicy support, you must choose Calico, not Flannel." },
+      { type: "narration", text: "On the KillerCoda exam environment, Cilium may already be installed. Always check first with kubectl get pods in kube-system." },
+      { type: "narration", text: "On the real exam, if nodes show NotReady, installing the CNI is your first step before anything else works." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Check if a CNI is already installed." },
+      { type: "code", text: "kubectl get nodes\nkubectl get pods -n kube-system | grep -E 'cilium|calico|flannel'" },
+      { type: "narration", text: "Step two. If no CNI is installed, install Calico since it supports NetworkPolicy." },
+      { type: "code", text: "kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/tigera-operator.yaml" },
+      { type: "narration", text: "Step three. Wait for calico pods to be ready and nodes to show Ready status." },
+      { type: "code", text: "kubectl get pods -n tigera-operator\nkubectl get pods -n calico-system\nkubectl get nodes" },
+    ],
+  },
+
+  // ── Q9: CRI-Dockerd ──
+  {
+    id: 9, title: "CRI-Dockerd", difficulty: "Medium",
+    scenario: [
+      { type: "narration", text: "Install the CRI Docker daemon package from a local .deb file." },
+      { type: "narration", text: "Enable and start the cri-docker service." },
+      { type: "narration", text: "Configure four specific sysctl kernel parameters for container networking." },
+      { type: "narration", text: "The parameters include bridge netfilter, IPv6 forwarding, IPv4 forwarding, and conntrack max." },
+    ],
+    concepts: [
+      { type: "narration", text: "CRI-dockerd is a shim that allows Docker to be used as a Container Runtime Interface in Kubernetes." },
+      { type: "narration", text: "Since Kubernetes 1.24, dockershim was removed from kubelet. CRI-dockerd replaces it for Docker users." },
+      { type: "narration", text: "The sysctl parameters are critical for container networking. bridge-nf-call-iptables lets iptables see bridged traffic. ip_forward enables routing between containers." },
+      { type: "narration", text: "Always use sysctl --system after writing the config file to apply changes immediately without a reboot." },
+      { type: "narration", text: "On the exam, use systemctl enable --now to both enable and start a service in a single command." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Install the deb package and enable the service." },
+      { type: "code", text: "sudo dpkg -i /root/cri-dockerd.deb\nsudo systemctl enable --now cri-docker.service\nsudo systemctl status cri-docker.service" },
+      { type: "narration", text: "Step two. Write the sysctl configuration file." },
+      { type: "code", text: "sudo tee /etc/sysctl.d/kube.conf >/dev/null <<'EOF'\nnet.bridge.bridge-nf-call-iptables=1\nnet.ipv6.conf.all.forwarding=1\nnet.ipv4.ip_forward=1\nnet.netfilter.nf_conntrack_max=131072\nEOF\nsudo sysctl --system" },
+      { type: "narration", text: "Step three. Verify all four parameters are correctly set." },
+      { type: "code", text: "sysctl net.bridge.bridge-nf-call-iptables\nsysctl net.ipv6.conf.all.forwarding\nsysctl net.ipv4.ip_forward\nsysctl net.netfilter.nf_conntrack_max" },
+    ],
+  },
+
+  // ── Q10: Taints & Tolerations ──
+  {
+    id: 10, title: "Taints & Tolerations", difficulty: "Easy",
+    scenario: [
+      { type: "narration", text: "Taint node01 so that no normal pods can be scheduled on it." },
+      { type: "narration", text: "The taint key is PERMISSION, the value is granted, and the effect is NoSchedule." },
+      { type: "narration", text: "Then create a pod named nginx that can tolerate the taint and schedule on node01." },
+    ],
+    concepts: [
+      { type: "narration", text: "Taints and tolerations work together. A taint on a node repels pods. A toleration on a pod allows it to schedule on a tainted node." },
+      { type: "narration", text: "There are three taint effects: NoSchedule prevents scheduling, PreferNoSchedule is a soft preference, and NoExecute evicts existing pods." },
+      { type: "narration", text: "The toleration must match the taint exactly: same key, same value, same effect." },
+      { type: "narration", text: "Note that tolerations alone don't guarantee scheduling on a specific node. They just allow it. For guaranteed placement, combine with nodeSelector or nodeAffinity." },
+      { type: "narration", text: "On the exam, remember the taint command format: kubectl taint nodes <node> key=value:effect." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Apply the taint to node01." },
+      { type: "code", text: "kubectl taint nodes node01 PERMISSION=granted:NoSchedule" },
+      { type: "narration", text: "Step two. Create the nginx pod with a matching toleration." },
+      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: v1\nkind: Pod\nmetadata:\n  name: nginx\nspec:\n  containers:\n  - name: nginx\n    image: nginx\n  tolerations:\n  - key: PERMISSION\n    operator: Equal\n    value: granted\n    effect: NoSchedule\nEOF" },
+      { type: "narration", text: "Step three. Verify the pod is running on node01." },
+      { type: "code", text: "kubectl get pods -o wide" },
+    ],
+  },
+
+  // ── Q11: Gateway API Migration ──
+  {
+    id: 11, title: "Gateway API Migration", difficulty: "Medium",
+    scenario: [
+      { type: "narration", text: "There is an existing web application using an Ingress resource named web." },
+      { type: "narration", text: "You must migrate this Ingress configuration to the new Kubernetes Gateway API." },
+      { type: "narration", text: "Create a Gateway named web-gateway and an HTTPRoute named web-route." },
+      { type: "narration", text: "Both must use the hostname gateway.web.k8s.local and maintain the existing TLS configuration." },
+      { type: "narration", text: "A GatewayClass named nginx-class is already installed." },
+    ],
+    concepts: [
+      { type: "narration", text: "The Gateway API is the successor to Ingress. It separates infrastructure concerns from routing concerns." },
+      { type: "narration", text: "A GatewayClass defines the controller, like an IngressClass. A Gateway defines listeners and TLS termination. An HTTPRoute defines the actual routing rules." },
+      { type: "narration", text: "The migration pattern is: Ingress TLS section maps to Gateway listeners, and Ingress rules map to HTTPRoute rules." },
+      { type: "narration", text: "Always inspect the existing Ingress first with kubectl describe ingress to understand what you need to replicate." },
+      { type: "narration", text: "The HTTPRoute references the Gateway via parentRefs. The Gateway references the GatewayClass via gatewayClassName." },
+      { type: "narration", text: "On the exam, Gateway API is a newer topic. Know the three-tier model: GatewayClass, Gateway, HTTPRoute." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Inspect the existing Ingress to understand the current configuration." },
+      { type: "code", text: "kubectl describe ingress web" },
+      { type: "narration", text: "Step two. Create the Gateway with HTTPS listener and TLS termination." },
+      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: gateway.networking.k8s.io/v1\nkind: Gateway\nmetadata:\n  name: web-gateway\nspec:\n  gatewayClassName: nginx-class\n  listeners:\n  - name: https\n    protocol: HTTPS\n    port: 443\n    hostname: gateway.web.k8s.local\n    tls:\n      mode: Terminate\n      certificateRefs:\n      - kind: Secret\n        name: web-tls\nEOF" },
+      { type: "narration", text: "Step three. Create the HTTPRoute that references the Gateway." },
+      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: gateway.networking.k8s.io/v1\nkind: HTTPRoute\nmetadata:\n  name: web-route\nspec:\n  parentRefs:\n  - name: web-gateway\n  hostnames:\n  - \"gateway.web.k8s.local\"\n  rules:\n  - matches:\n    - path:\n        type: PathPrefix\n        value: /\n    backendRefs:\n    - name: web-service\n      port: 80\nEOF" },
+      { type: "narration", text: "Step four. Verify both resources are created." },
+      { type: "code", text: "kubectl get gateway,httproute" },
+    ],
+  },
+
+  // ── Q12: Ingress ──
+  {
+    id: 12, title: "Ingress", difficulty: "Easy",
+    scenario: [
+      { type: "narration", text: "There is an existing deployment named echo in the echo-sound namespace." },
+      { type: "narration", text: "Expose it with a NodePort service called echo-service on port 8080." },
+      { type: "narration", text: "Then create an Ingress resource named echo for the host example.org with path /echo." },
+    ],
+    concepts: [
+      { type: "narration", text: "Ingress exposes HTTP and HTTPS routes from outside the cluster to services inside the cluster." },
+      { type: "narration", text: "An Ingress needs a backend service to route traffic to. That's why you create the service first." },
+      { type: "narration", text: "The pathType field is required. Use Prefix for path-based routing or Exact for exact matches." },
+      { type: "narration", text: "On the exam, always match the service port in the Ingress backend to the service's port, not the container's targetPort." },
+      { type: "narration", text: "kubectl expose is a quick way to create a service without writing YAML from scratch." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Expose the deployment as a NodePort service." },
+      { type: "code", text: "kubectl expose deployment echo -n echo-sound \\\n  --name echo-service --type NodePort \\\n  --port 8080 --target-port 8080" },
+      { type: "narration", text: "Step two. Create the Ingress resource." },
+      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: echo\n  namespace: echo-sound\nspec:\n  rules:\n  - host: example.org\n    http:\n      paths:\n      - path: /echo\n        pathType: Prefix\n        backend:\n          service:\n            name: echo-service\n            port:\n              number: 8080\nEOF" },
+      { type: "narration", text: "Step three. Verify the Ingress and service are created." },
+      { type: "code", text: "kubectl get ingress,svc -n echo-sound" },
+    ],
+  },
+
+  // ── Q13: Network Policy (Least-Permissive) ──
+  {
+    id: 13, title: "Network Policy (Least-Permissive)", difficulty: "Medium",
+    scenario: [
+      { type: "narration", text: "There are two deployments: Frontend in the frontend namespace and Backend in the backend namespace." },
+      { type: "narration", text: "Three Network Policy YAML files are available in /root/network-policies/." },
+      { type: "narration", text: "You must determine which policy allows interaction between frontend and backend in the least permissive way." },
+      { type: "narration", text: "Deploy only the correct, most restrictive policy." },
+    ],
+    concepts: [
+      { type: "narration", text: "NetworkPolicies are like firewall rules for pods. By default, all traffic is allowed. Once you apply a policy, only explicitly allowed traffic is permitted." },
+      { type: "narration", text: "The principle of least privilege means: allow only what is needed, nothing more." },
+      { type: "narration", text: "When comparing policies, look for the one that is most specific. A policy allowing all ingress is too broad. A policy allowing only specific namespaces and pods is more restrictive." },
+      { type: "narration", text: "On the exam, read each policy carefully. Check the namespace selectors, pod selectors, and any IP ranges." },
+      { type: "narration", text: "An extra IP block in a policy that isn't needed makes it more permissive than necessary. Choose the policy without unnecessary exceptions." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Read all three policies and compare their rules." },
+      { type: "code", text: "ls /root/network-policies/\ncat /root/network-policies/network-policy-1.yaml\ncat /root/network-policies/network-policy-2.yaml\ncat /root/network-policies/network-policy-3.yaml" },
+      { type: "narration", text: "Policy 1 allows all ingress. Too permissive. Policy 2 allows frontend namespace plus an IP block. Unnecessary extra access. Policy 3 allows only frontend namespace and frontend pods. This is the most restrictive." },
+      { type: "narration", text: "Step two. Apply the least permissive policy." },
+      { type: "code", text: "kubectl apply -f /root/network-policies/network-policy-3.yaml" },
+      { type: "narration", text: "Step three. Verify the policy is applied." },
+      { type: "code", text: "kubectl get networkpolicy -n backend\nkubectl describe networkpolicy -n backend" },
+    ],
+  },
+
+  // ── Q14: StorageClass ──
+  {
+    id: 14, title: "StorageClass", difficulty: "Easy",
+    scenario: [
+      { type: "narration", text: "Create a new StorageClass named local-storage with the rancher.io/local-path provisioner." },
+      { type: "narration", text: "Set VolumeBindingMode to WaitForFirstConsumer." },
+      { type: "narration", text: "Then patch it to be the default StorageClass." },
+      { type: "narration", text: "Ensure it is the only default StorageClass in the cluster." },
+    ],
+    concepts: [
+      { type: "narration", text: "A StorageClass provides a way for administrators to describe storage profiles. Think of it as a template for provisioning volumes." },
+      { type: "narration", text: "WaitForFirstConsumer delays volume binding until a pod using the PVC is scheduled. This ensures the volume is created on the correct node." },
+      { type: "narration", text: "The default StorageClass is set via an annotation: storageclass.kubernetes.io/is-default-class set to true." },
+      { type: "narration", text: "Only one StorageClass should be default. If you're making a new one default, remove the annotation from the old default." },
+      { type: "narration", text: "On the exam, check existing StorageClasses first to know which one is currently the default." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Create the StorageClass without making it default yet." },
+      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: local-storage\n  annotations:\n    storageclass.kubernetes.io/is-default-class: \"false\"\nprovisioner: rancher.io/local-path\nvolumeBindingMode: WaitForFirstConsumer\nEOF" },
+      { type: "narration", text: "Step two. Patch it to become the default." },
+      { type: "code", text: "kubectl patch storageclass local-storage -p \\\n  '{\"metadata\":{\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}'" },
+      { type: "narration", text: "Step three. Remove default from the old StorageClass if one exists." },
+      { type: "code", text: "kubectl patch storageclass local-path -p \\\n  '{\"metadata\":{\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"false\"}}}' 2>/dev/null || true" },
+      { type: "narration", text: "Step four. Verify local-storage is the only default." },
+      { type: "code", text: "kubectl get sc" },
+    ],
+  },
+
+  // ── Q15: Etcd Fix (API Server Broken) ──
+  {
+    id: 15, title: "Etcd Fix (API Server Broken)", difficulty: "Hard",
+    scenario: [
+      { type: "narration", text: "After a cluster migration, the controlplane kube-apiserver is not coming up." },
+      { type: "narration", text: "Before migration, etcd was external and in high availability mode." },
+      { type: "narration", text: "After migration, the kube-apiserver was left pointing to the etcd peer port 2380 instead of the client port 2379." },
+      { type: "narration", text: "You must fix the configuration so the API server connects to etcd correctly." },
+    ],
+    concepts: [
+      { type: "narration", text: "This is the only hard question on the exam. It tests your understanding of static pods and etcd configuration." },
+      { type: "narration", text: "The kube-apiserver runs as a static pod. Its manifest lives at /etc/kubernetes/manifests/kube-apiserver.yaml." },
+      { type: "narration", text: "Etcd uses two ports. Port 2379 is the client port, used by the API server to read and write data. Port 2380 is the peer port, used for etcd-to-etcd replication." },
+      { type: "narration", text: "When you edit a static pod manifest, kubelet automatically detects the change and restarts the pod. No kubectl command needed." },
+      { type: "narration", text: "Since the API server is down, kubectl commands won't work until you fix this. You must edit the file directly on the control plane node." },
+      { type: "narration", text: "On the exam, if the API server is broken, don't panic. Check the static pod manifests first. That's usually where the issue is." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Check the current etcd server URL in the API server manifest." },
+      { type: "code", text: "sudo grep 'etcd-servers' /etc/kubernetes/manifests/kube-apiserver.yaml" },
+      { type: "narration", text: "You'll see it points to port 2380. That's the peer port. It should be 2379, the client port." },
+      { type: "narration", text: "Step two. Fix the port from 2380 to 2379." },
+      { type: "code", text: "sudo sed -i 's/:2380/:2379/g' /etc/kubernetes/manifests/kube-apiserver.yaml" },
+      { type: "narration", text: "Step three. Wait about 30 seconds for kubelet to detect the change and restart the API server." },
+      { type: "code", text: "sleep 30\nkubectl get nodes" },
+      { type: "narration", text: "If kubectl works and nodes show Ready, the fix is confirmed. This is the fastest question to solve if you know where to look." },
+    ],
+  },
+
+  // ── Q16: NodePort Service ──
+  {
+    id: 16, title: "NodePort Service", difficulty: "Easy",
+    scenario: [
+      { type: "narration", text: "There is a deployment named nodeport-deployment in the relative namespace." },
+      { type: "narration", text: "Configure the deployment so it exposes port 80 with name http and protocol TCP." },
+      { type: "narration", text: "Then create a NodePort Service named nodeport-service that maps port 80 to NodePort 30080." },
+    ],
+    concepts: [
+      { type: "narration", text: "A NodePort service exposes a service on a static port on every node in the cluster." },
+      { type: "narration", text: "There are three port concepts: port is the service port, targetPort is the container port, and nodePort is the external port on the node." },
+      { type: "narration", text: "The NodePort range is 30000 to 32767 by default. Anything outside this range will fail." },
+      { type: "narration", text: "The service selector must match the pod labels. Check the deployment's pod template labels to get the right selector." },
+      { type: "narration", text: "On the exam, adding a named containerPort to the deployment isn't strictly required for the service to work, but the question asks for it explicitly." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Patch the deployment to add the named container port." },
+      { type: "code", text: "kubectl patch deployment nodeport-deployment -n relative -p '{\n  \"spec\":{\"template\":{\"spec\":{\"containers\":[{\n    \"name\":\"nginx\",\n    \"ports\":[{\"name\":\"http\",\"containerPort\":80,\"protocol\":\"TCP\"}]\n  }]}}}}'" },
+      { type: "narration", text: "Step two. Create the NodePort service." },
+      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: v1\nkind: Service\nmetadata:\n  name: nodeport-service\n  namespace: relative\nspec:\n  type: NodePort\n  selector:\n    app: nodeport-deployment\n  ports:\n  - port: 80\n    targetPort: 80\n    protocol: TCP\n    nodePort: 30080\nEOF" },
+      { type: "narration", text: "Step three. Verify the service is created with the correct NodePort." },
+      { type: "code", text: "kubectl get svc nodeport-service -n relative" },
+    ],
+  },
+
+  // ── Q17: TLS Configuration ──
+  {
+    id: 17, title: "TLS Configuration", difficulty: "Medium",
+    scenario: [
+      { type: "narration", text: "There is an existing deployment in the nginx-static namespace." },
+      { type: "narration", text: "A ConfigMap provides the nginx TLS configuration, currently supporting both TLS 1.2 and TLS 1.3." },
+      { type: "narration", text: "You must edit the ConfigMap to only allow TLS 1.3, then add a DNS entry to /etc/hosts and verify." },
+    ],
+    concepts: [
+      { type: "narration", text: "TLS, or Transport Layer Security, encrypts traffic between client and server. TLS 1.3 is the latest and most secure version." },
+      { type: "narration", text: "In nginx, the ssl_protocols directive controls which TLS versions are accepted. Removing TLS v1.2 from the directive forces TLS 1.3 only." },
+      { type: "narration", text: "After changing a ConfigMap, you need to restart the pods that use it. The easiest way is kubectl rollout restart." },
+      { type: "narration", text: "The verification uses curl with specific TLS flags. The --tls-max 1.2 flag should fail, and --tlsv1.3 should succeed." },
+      { type: "narration", text: "On the exam, don't forget to add the service IP to /etc/hosts. Without it, the hostname won't resolve." },
+    ],
+    solution: [
+      { type: "narration", text: "Step one. Edit the ConfigMap to remove TLS v1.2 from the ssl_protocols directive." },
+      { type: "code", text: "kubectl get configmap nginx-config -n nginx-static -o yaml | \\\n  sed 's/ssl_protocols TLSv1.2 TLSv1.3;/ssl_protocols TLSv1.3;/' | \\\n  kubectl apply -f -" },
+      { type: "narration", text: "Step two. Get the service ClusterIP and add it to /etc/hosts." },
+      { type: "code", text: "SVC_IP=$(kubectl get svc nginx-static -n nginx-static \\\n  -o jsonpath='{.spec.clusterIP}')\necho \"$SVC_IP ckaquestion.k8s.local\" >> /etc/hosts" },
+      { type: "narration", text: "Step three. Restart the deployment to pick up the new ConfigMap." },
+      { type: "code", text: "kubectl rollout restart -n nginx-static deployment nginx-static\nkubectl rollout status -n nginx-static deployment nginx-static" },
+      { type: "narration", text: "Step four. Verify TLS 1.2 is rejected and TLS 1.3 works." },
+      { type: "code", text: "curl -vk --tls-max 1.2 https://ckaquestion.k8s.local  # should fail\ncurl -vk --tlsv1.3 https://ckaquestion.k8s.local     # should work" },
+    ],
+  },
+];
+
+// ── STATE ──────────────────────────────────────────────────
+let currentIndex = 0;
+let ttsRate = 1.0;
+let currentUtterance = null;
+let currentTtsCleanup = null;
+let preferredVoice = null;
+let isPaused = false;
+let lineSpans = [];
+let lineIndex = 0;
+let stopped = true;
+let activeSection = null;
+
+// ── VOICE SELECTION ────────────────────────────────────────
+function findBestVoice() {
+  const voices = speechSynthesis.getVoices();
+  const edgeNeuralUS = voices.find(v =>
+    v.name.includes('Online') && v.name.includes('Natural') && v.lang === 'en-US'
+  );
+  if (edgeNeuralUS) return edgeNeuralUS;
+  const msOnlineUS = voices.find(v =>
+    v.name.includes('Microsoft') && v.name.includes('Online') && v.lang === 'en-US'
+  );
+  if (msOnlineUS) return msOnlineUS;
+  const anyUS = voices.find(v => v.lang === 'en-US');
+  if (anyUS) return anyUS;
+  return voices.find(v => v.lang.startsWith('en')) || voices[0];
+}
+
+speechSynthesis.onvoiceschanged = () => { preferredVoice = findBestVoice(); };
+preferredVoice = findBestVoice();
+
+// ── TTS ENGINE ─────────────────────────────────────────────
+function stopTTS() {
+  stopped = true;
+  isPaused = false;
+  if (currentTtsCleanup) { currentTtsCleanup(); currentTtsCleanup = null; }
+  if (speechSynthesis.speaking || speechSynthesis.pending) {
+    speechSynthesis.cancel();
+  }
+  document.querySelectorAll('.tts-line-active').forEach(s => s.classList.remove('tts-line-active'));
+  const content = document.getElementById('content');
+  content.classList.remove('tts-reading');
+  updatePlayButton();
+  updateProgress();
+}
+
+function updatePlayButton() {
+  const btn = document.getElementById('btn-play');
+  if (stopped) {
+    btn.innerHTML = '&#9654; play';
+    btn.classList.remove('active');
+  } else if (isPaused) {
+    btn.innerHTML = '&#9654; resume';
+    btn.classList.remove('active');
+  } else {
+    btn.innerHTML = '&#10074;&#10074; pause';
+    btn.classList.add('active');
+  }
+}
+
+function updateProgress() {
+  const el = document.getElementById('line-progress');
+  if (lineSpans.length === 0) {
+    el.textContent = 'line 0/0';
+  } else {
+    el.textContent = `line ${Math.min(lineIndex + 1, lineSpans.length)}/${lineSpans.length}`;
+  }
+}
+
+function collectNarratableLines() {
+  const content = document.getElementById('content');
+  lineSpans = Array.from(content.querySelectorAll('.tts-line[data-type="narration"]'));
+}
+
+function startTTS(fromSection) {
+  stopTTS();
+  collectNarratableLines();
+  if (lineSpans.length === 0) return;
+
+  // If starting from a section, find the first narration line in that section
+  let startIdx = 0;
+  if (fromSection) {
+    const sectionEl = document.getElementById('section-' + fromSection);
+    if (sectionEl) {
+      const firstLine = sectionEl.querySelector('.tts-line[data-type="narration"]');
+      if (firstLine) {
+        startIdx = lineSpans.indexOf(firstLine);
+        if (startIdx === -1) startIdx = 0;
+      }
+    }
+  }
+
+  lineIndex = startIdx;
+  stopped = false;
+  isPaused = false;
+
+  const content = document.getElementById('content');
+  content.classList.add('tts-reading');
+
+  currentTtsCleanup = () => {
+    stopped = true;
+    content.classList.remove('tts-reading');
+  };
+
+  updatePlayButton();
+  speakLine();
+}
+
+function speakLine() {
+  if (stopped || lineIndex >= lineSpans.length) {
+    lineSpans.forEach(s => s.classList.remove('tts-line-active'));
+    const content = document.getElementById('content');
+    content.classList.remove('tts-reading');
+    stopped = true;
+    updatePlayButton();
+    updateProgress();
+    return;
+  }
+
+  // Highlight current line
+  lineSpans.forEach(s => s.classList.remove('tts-line-active'));
+  lineSpans[lineIndex].classList.add('tts-line-active');
+
+  // Auto-scroll to active line
+  lineSpans[lineIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // Update section indicators
+  updateActiveSection();
+  updateProgress();
+
+  const text = lineSpans[lineIndex].textContent;
+  const utt = new SpeechSynthesisUtterance(text);
+  if (preferredVoice) utt.voice = preferredVoice;
+  utt.rate = ttsRate;
+  utt.pitch = 1.0;
+  currentUtterance = utt;
+
+  utt.onend = () => {
+    lineIndex++;
+    speakLine();
+  };
+
+  utt.onerror = (e) => {
+    if (e.error === 'canceled') return; // Normal cancellation
+    stopped = true;
+    lineSpans.forEach(s => s.classList.remove('tts-line-active'));
+    const content = document.getElementById('content');
+    content.classList.remove('tts-reading');
+    updatePlayButton();
+  };
+
+  speechSynthesis.speak(utt);
+}
+
+function togglePlay() {
+  if (stopped) {
+    startTTS(null);
+  } else if (isPaused) {
+    isPaused = false;
+    speechSynthesis.resume();
+    updatePlayButton();
+  } else {
+    isPaused = true;
+    speechSynthesis.pause();
+    updatePlayButton();
+  }
+}
+
+function updateActiveSection() {
+  if (lineIndex >= lineSpans.length) return;
+  const activeLine = lineSpans[lineIndex];
+  const section = activeLine.closest('[data-section]');
+  if (section) {
+    const name = section.dataset.section;
+    document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById('sec-' + name);
+    if (btn) btn.classList.add('active');
+  }
+}
+
+// ── RENDER ─────────────────────────────────────────────────
+function renderQuestion(idx) {
+  stopTTS();
+  const q = QUESTIONS[idx];
+  const content = document.getElementById('content');
+
+  // Update header
+  const info = document.getElementById('question-info');
+  const badgeClass = q.difficulty === 'Easy' ? 'badge-easy' : q.difficulty === 'Medium' ? 'badge-medium' : 'badge-hard';
+  info.innerHTML = `<span class="q-num">Q${q.id}/17</span>: <span class="q-title">${q.title}</span> <span class="badge ${badgeClass}">${q.difficulty}</span>`;
+
+  // Update nav buttons
+  document.getElementById('btn-prev').disabled = idx === 0;
+  document.getElementById('btn-next').disabled = idx === QUESTIONS.length - 1;
+
+  // Build content
+  let html = '';
+
+  // Scenario
+  html += `<div id="section-scenario" data-section="scenario">`;
+  html += `<div class="section-header">Scenario</div>`;
+  q.scenario.forEach(item => {
+    if (item.type === 'narration') {
+      html += `<span class="tts-line" data-type="narration">${escapeHtml(item.text)}</span>`;
+    } else {
+      html += `<pre class="code-block">${escapeHtml(item.text)}</pre>`;
+    }
+  });
+  html += `</div>`;
+
+  // Concepts
+  html += `<div id="section-concepts" data-section="concepts">`;
+  html += `<div class="section-header">Concepts</div>`;
+  q.concepts.forEach(item => {
+    if (item.type === 'narration') {
+      html += `<span class="tts-line" data-type="narration">${escapeHtml(item.text)}</span>`;
+    } else {
+      html += `<pre class="code-block">${escapeHtml(item.text)}</pre>`;
+    }
+  });
+  html += `</div>`;
+
+  // Solution
+  html += `<div id="section-solution" data-section="solution">`;
+  html += `<div class="section-header">Solution Walkthrough</div>`;
+  q.solution.forEach(item => {
+    if (item.type === 'narration') {
+      html += `<span class="tts-line" data-type="narration">${escapeHtml(item.text)}</span>`;
+    } else {
+      html += `<pre class="code-block">${escapeHtml(item.text)}</pre>`;
+    }
+  });
+  html += `</div>`;
+
+  content.innerHTML = html;
+  content.scrollTop = 0;
+
+  // Reset section buttons
+  document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
+
+  // Collect lines for progress
+  collectNarratableLines();
+  updateProgress();
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────
+function nextQuestion() {
+  if (currentIndex < QUESTIONS.length - 1) {
+    currentIndex++;
+    renderQuestion(currentIndex);
+  }
+}
+
+function prevQuestion() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderQuestion(currentIndex);
+  }
+}
+
+function jumpSection(name) {
+  const el = document.getElementById('section-' + name);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  // If TTS is playing, restart from this section
+  if (!stopped) {
+    startTTS(name);
+  }
+}
+
+// ── SPEED CONTROLS ─────────────────────────────────────────
+function setSpeed(rate) {
+  ttsRate = rate;
+  document.querySelectorAll('.speed-btn').forEach(b => {
+    b.classList.toggle('active', parseFloat(b.textContent) === rate);
+  });
+  // If currently speaking, restart current line at new speed
+  if (!stopped && !isPaused) {
+    const currentLineIdx = lineIndex;
+    speechSynthesis.cancel();
+    lineIndex = currentLineIdx;
+    speakLine();
+  }
+}
+
+// ── KEYBOARD SHORTCUTS ────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  // Don't capture if user is in an input
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+  switch (e.key) {
+    case ' ':
+      e.preventDefault();
+      togglePlay();
+      break;
+    case 'ArrowRight':
+      e.preventDefault();
+      nextQuestion();
+      break;
+    case 'ArrowLeft':
+      e.preventDefault();
+      prevQuestion();
+      break;
+    case 'Escape':
+      e.preventDefault();
+      stopTTS();
+      break;
+    case '1':
+      e.preventDefault();
+      jumpSection('scenario');
+      break;
+    case '2':
+      e.preventDefault();
+      jumpSection('concepts');
+      break;
+    case '3':
+      e.preventDefault();
+      jumpSection('solution');
+      break;
+  }
+});
+
+// ── INIT ───────────────────────────────────────────────────
+renderQuestion(0);
+</script>
+</body>
+</html>
