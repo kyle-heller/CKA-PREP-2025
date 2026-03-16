@@ -7,7 +7,7 @@
 #   --start N      Start from question N (1-17)
 # ═══════════════════════════════════════════════════════════════════
 
-set -euo pipefail
+set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BASE_DIR="$(dirname "$SCRIPT_DIR")"
