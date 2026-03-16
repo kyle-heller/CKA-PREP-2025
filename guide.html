@@ -3,747 +3,249 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CKA Audio Guide</title>
+<title>K8s Audio Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:      #0d0d0d;
-  --surface: #141414;
-  --border:  #222;
-  --dim:     #333;
-  --muted:   #555;
-  --text:    #c8c8c8;
-  --bright:  #e8e8e8;
-  --green:   #4ade80;
-  --red:     #f87171;
-  --amber:   #fbbf24;
-  --blue:    #60a5fa;
+  --bg:#0d0d0d;--surface:#141414;--border:#222;--dim:#333;--muted:#555;
+  --text:#c8c8c8;--bright:#e8e8e8;--green:#4ade80;--red:#f87171;
+  --amber:#fbbf24;--blue:#60a5fa;
 }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.6;height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* EXAM SELECTOR */
+#exam-select{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:24px}
+#exam-select h1{font-size:22px;color:var(--green);letter-spacing:2px}
+#exam-select .subtitle{color:var(--muted);font-size:12px;margin-top:-12px}
+.exam-cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.exam-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 28px;cursor:pointer;transition:all .2s;text-align:center;min-width:180px}
+.exam-card:hover{border-color:var(--green);background:#1a1a1a}
+.exam-card h2{font-size:16px;color:var(--bright);margin-bottom:4px}
+.exam-card p{font-size:11px;color:var(--muted)}
+.exam-card .count{color:var(--amber);font-size:13px;margin-top:8px}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  line-height: 1.6;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
+/* COPY BAR */
+#copy-bar{background:#0a1628;border:1px solid #1e3a5f;border-radius:6px;padding:10px 16px;margin:16px auto 0;max-width:700px;display:none;align-items:center;gap:10px;font-size:11px}
+#copy-bar code{color:var(--green);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#copy-bar button{background:#1e3a5f;border:none;color:var(--blue);font-family:inherit;font-size:11px;padding:4px 10px;border-radius:4px;cursor:pointer;white-space:nowrap}
+#copy-bar button:hover{background:#2a4a6f}
 
-/* ── HEADER ────────────────────────────────────── */
-#header {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-}
+/* HEADER */
+#header{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#header-left{display:flex;align-items:center;gap:14px}
+#header h1{font-size:15px;font-weight:700;color:var(--green);letter-spacing:1px;cursor:pointer}
+#header h1:hover{text-decoration:underline}
+#question-info{font-size:13px}
+#question-info .q-num{color:var(--amber);font-weight:600}
+#question-info .q-title{color:var(--bright)}
+.badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.badge-easy{background:#16a34a22;color:var(--green);border:1px solid #16a34a44}
+.badge-medium{background:#d9770622;color:var(--amber);border:1px solid #d9770644}
+.badge-hard{background:#dc262622;color:var(--red);border:1px solid #dc262644}
+.badge-domain{background:#3b82f622;color:var(--blue);border:1px solid #3b82f644;margin-left:4px}
+#nav-buttons{display:flex;gap:8px}
+#nav-buttons button{background:var(--dim);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 12px;border-radius:4px;cursor:pointer;transition:all .15s}
+#nav-buttons button:hover{background:var(--muted);color:var(--bright)}
+#nav-buttons button:disabled{opacity:.3;cursor:default}
 
-#header-left {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+/* CONTENT */
+#content{flex:1;overflow-y:auto;padding:24px 32px 100px;scroll-behavior:smooth}
+.section-header{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.section-header:first-child{margin-top:0}
+.tts-line{display:block;padding:4px 12px;border-radius:4px;transition:all .2s;opacity:.7;cursor:pointer}
+.tts-reading .tts-line{opacity:.45}
+.tts-reading .tts-line.tts-line-active{opacity:1;color:var(--amber);background:#fbbf2410}
+.tts-line:hover{opacity:.9;background:#ffffff06}
+.code-block{background:#1a1a2e;border-left:3px solid var(--green);border-radius:0 6px 6px 0;padding:12px 16px;margin:8px 0;font-size:13px;line-height:1.5;overflow-x:auto;white-space:pre-wrap;word-break:break-all;color:#a8d8a8}
 
-#header h1 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--green);
-  letter-spacing: 1px;
-}
+/* CONTROLS */
+#controls{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:100}
+#controls-left{display:flex;align-items:center;gap:12px}
+#controls-center{display:flex;align-items:center;gap:8px}
+#controls-right{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)}
+.ctrl-btn{background:var(--dim);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:13px;padding:6px 14px;border-radius:4px;cursor:pointer;transition:all .15s}
+.ctrl-btn:hover{background:var(--muted);color:var(--bright)}
+.ctrl-btn.active{background:var(--green);color:var(--bg);border-color:var(--green)}
+.section-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:inherit;font-size:11px;padding:4px 10px;border-radius:4px;cursor:pointer;transition:all .15s}
+.section-btn:hover{color:var(--text);border-color:var(--muted)}
+.section-btn.active{color:var(--amber);border-color:var(--amber)}
+.speed-btn{background:none;border:none;color:var(--muted);font-family:inherit;font-size:11px;padding:2px 6px;cursor:pointer;border-radius:3px;transition:all .15s}
+.speed-btn:hover{color:var(--text)}
+.speed-btn.active{color:var(--amber);font-weight:600}
+.kbd{font-size:10px;color:var(--dim);padding:1px 4px;border:1px solid var(--dim);border-radius:3px;margin-left:4px}
+#content::-webkit-scrollbar{width:6px}
+#content::-webkit-scrollbar-track{background:var(--bg)}
+#content::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px}
 
-#question-info {
-  font-size: 13px;
-  color: var(--text);
-}
-
-#question-info .q-num { color: var(--amber); font-weight: 600; }
-#question-info .q-title { color: var(--bright); }
-
-.badge {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.badge-easy { background: #16a34a22; color: var(--green); border: 1px solid #16a34a44; }
-.badge-medium { background: #d9770622; color: var(--amber); border: 1px solid #d9770644; }
-.badge-hard { background: #dc262622; color: var(--red); border: 1px solid #dc262644; }
-
-#nav-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-#nav-buttons button {
-  background: var(--dim);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  padding: 4px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-#nav-buttons button:hover { background: var(--muted); color: var(--bright); }
-#nav-buttons button:disabled { opacity: 0.3; cursor: default; }
-
-/* ── CONTENT ───────────────────────────────────── */
-#content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px 32px 100px;
-  scroll-behavior: smooth;
-}
-
-.section-header {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin: 28px 0 12px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
-}
-.section-header:first-child { margin-top: 0; }
-
-/* TTS narration lines */
-.tts-line {
-  display: block;
-  padding: 4px 12px;
-  border-radius: 4px;
-  transition: all 0.2s;
-  opacity: 0.7;
-  cursor: pointer;
-}
-
-.tts-reading .tts-line { opacity: 0.45; }
-.tts-reading .tts-line.tts-line-active {
-  opacity: 1;
-  color: var(--amber);
-  background: #fbbf2410;
-}
-
-.tts-line:hover { opacity: 0.9; background: #ffffff06; }
-
-/* Code blocks */
-.code-block {
-  background: #1a1a2e;
-  border-left: 3px solid var(--green);
-  border-radius: 0 6px 6px 0;
-  padding: 12px 16px;
-  margin: 8px 0;
-  font-size: 13px;
-  line-height: 1.5;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-break: break-all;
-  color: #a8d8a8;
-}
-
-/* ── CONTROLS BAR ──────────────────────────────── */
-#controls {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  z-index: 100;
-}
-
-#controls-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-#controls-center {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-#controls-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.ctrl-btn {
-  background: var(--dim);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  padding: 6px 14px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.ctrl-btn:hover { background: var(--muted); color: var(--bright); }
-.ctrl-btn.active { background: var(--green); color: var(--bg); border-color: var(--green); }
-
-.section-btn {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--muted);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.section-btn:hover { color: var(--text); border-color: var(--muted); }
-.section-btn.active { color: var(--amber); border-color: var(--amber); }
-
-.speed-btn {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  padding: 2px 6px;
-  cursor: pointer;
-  border-radius: 3px;
-  transition: all 0.15s;
-}
-.speed-btn:hover { color: var(--text); }
-.speed-btn.active { color: var(--amber); font-weight: 600; }
-
-/* Scrollbar */
-#content::-webkit-scrollbar { width: 6px; }
-#content::-webkit-scrollbar-track { background: var(--bg); }
-#content::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 3px; }
-#content::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-
-/* Keyboard hints */
-.kbd {
-  font-size: 10px;
-  color: var(--dim);
-  padding: 1px 4px;
-  border: 1px solid var(--dim);
-  border-radius: 3px;
-  margin-left: 4px;
-}
+/* Guide view hidden by default */
+#guide-view{display:none;flex-direction:column;height:100vh}
+#guide-view.active{display:flex}
+#exam-select.hidden{display:none}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div id="header">
-  <div id="header-left">
-    <h1>CKA Audio Guide</h1>
-    <span id="question-info"></span>
+<!-- EXAM SELECTOR -->
+<div id="exam-select">
+  <h1>K8s Cert Audio Guide</h1>
+  <p class="subtitle">TTS-narrated practice walkthroughs</p>
+  <div id="copy-bar">
+    <code id="copy-cmd"></code>
+    <button onclick="copyCmd()">Copy</button>
   </div>
-  <div id="nav-buttons">
-    <button id="btn-prev" onclick="prevQuestion()">&lt;&lt; prev</button>
-    <button id="btn-next" onclick="nextQuestion()">next &gt;&gt;</button>
-  </div>
+  <div class="exam-cards" id="exam-cards"></div>
 </div>
 
-<!-- CONTENT -->
-<div id="content"></div>
-
-<!-- CONTROLS -->
-<div id="controls">
-  <div id="controls-left">
-    <button class="ctrl-btn" id="btn-play" onclick="togglePlay()">&#9654; play</button>
-    <button class="ctrl-btn" id="btn-stop" onclick="stopTTS()">&#9632; stop</button>
+<!-- GUIDE VIEW -->
+<div id="guide-view">
+  <div id="header">
+    <div id="header-left">
+      <h1 id="exam-label" onclick="backToMenu()">K8s Guide</h1>
+      <span id="question-info"></span>
+    </div>
+    <div id="nav-buttons">
+      <button id="btn-prev" onclick="prevQuestion()">&lt;&lt; prev</button>
+      <button id="btn-next" onclick="nextQuestion()">next &gt;&gt;</button>
+    </div>
   </div>
-  <div id="controls-center">
-    <button class="section-btn" id="sec-scenario" onclick="jumpSection('scenario')">Scenario<span class="kbd">1</span></button>
-    <button class="section-btn" id="sec-concepts" onclick="jumpSection('concepts')">Concepts<span class="kbd">2</span></button>
-    <button class="section-btn" id="sec-solution" onclick="jumpSection('solution')">Solution<span class="kbd">3</span></button>
-  </div>
-  <div id="controls-right">
-    <span>
-      <button class="speed-btn" onclick="setSpeed(0.8)">0.8x</button>
-      <button class="speed-btn active" id="speed-current" onclick="setSpeed(1.0)">1.0x</button>
-      <button class="speed-btn" onclick="setSpeed(1.2)">1.2x</button>
-    </span>
-    <span id="line-progress">line 0/0</span>
+  <div id="content"></div>
+  <div id="controls">
+    <div id="controls-left">
+      <button class="ctrl-btn" id="btn-play" onclick="togglePlay()">&#9654; play</button>
+      <button class="ctrl-btn" id="btn-stop" onclick="stopTTS()">&#9632; stop</button>
+    </div>
+    <div id="controls-center">
+      <button class="section-btn" id="sec-scenario" onclick="jumpSection('scenario')">Scenario<span class="kbd">1</span></button>
+      <button class="section-btn" id="sec-concepts" onclick="jumpSection('concepts')">Concepts<span class="kbd">2</span></button>
+      <button class="section-btn" id="sec-solution" onclick="jumpSection('solution')">Solution<span class="kbd">3</span></button>
+    </div>
+    <div id="controls-right">
+      <span>
+        <button class="speed-btn" onclick="setSpeed(0.8)">0.8x</button>
+        <button class="speed-btn active" onclick="setSpeed(1.0)">1.0x</button>
+        <button class="speed-btn" onclick="setSpeed(1.2)">1.2x</button>
+      </span>
+      <span id="line-progress">line 0/0</span>
+    </div>
   </div>
 </div>
 
 <script>
-// ── QUESTIONS DATA ─────────────────────────────────────────────
-const QUESTIONS = [
-  // ── Q1: MariaDB Persistent Volume ──
-  {
-    id: 1, title: "MariaDB Persistent Volume", difficulty: "Medium",
-    scenario: [
-      { type: "narration", text: "A user accidentally deleted the MariaDB Deployment in the mariadb namespace." },
-      { type: "narration", text: "The deployment was configured with persistent storage." },
-      { type: "narration", text: "Your job is to re-establish the deployment while preserving data by reusing the available PersistentVolume." },
-      { type: "narration", text: "A PersistentVolume already exists and is retained for reuse. Only one PV exists in the cluster." },
-      { type: "narration", text: "You need to create a PVC named mariadb, fix the deployment manifest, and apply it." },
-    ],
-    concepts: [
-      { type: "narration", text: "This question tests PersistentVolumes and PersistentVolumeClaims, which are core storage concepts in Kubernetes." },
-      { type: "narration", text: "A PersistentVolume is a cluster-level storage resource. A PersistentVolumeClaim is a namespace-level request for storage." },
-      { type: "narration", text: "When a PV has a Retain reclaim policy, deleting the PVC does not delete the underlying data." },
-      { type: "narration", text: "The key gotcha here is setting storageClassName to an empty string. This tells Kubernetes to bind to an existing PV without a storage class, rather than provisioning a new one." },
-      { type: "narration", text: "If you forget the empty storageClassName, the PVC might bind to the default storage class and provision a brand new volume, losing access to the old data." },
-      { type: "narration", text: "On the exam, always check the existing PV first with kubectl get pv to understand its capacity, access modes, and current status." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Create the PersistentVolumeClaim. Note the empty storageClassName." },
-      { type: "code", text: "cat <<'EOF' > pvc.yaml\napiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: mariadb\n  namespace: mariadb\nspec:\n  storageClassName: \"\"\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 250Mi\nEOF\nkubectl apply -f pvc.yaml" },
-      { type: "narration", text: "Step two. Verify the PVC is bound to the existing PV." },
-      { type: "code", text: "kubectl get pvc mariadb -n mariadb\nkubectl get pv" },
-      { type: "narration", text: "Step three. Fix the deployment manifest by filling in the claimName, then apply it." },
-      { type: "code", text: "sed -i 's/claimName: \"\"/claimName: \"mariadb\"/' ~/mariadb-deploy.yaml\nkubectl apply -f ~/mariadb-deploy.yaml" },
-      { type: "narration", text: "Step four. Verify the deployment is running and the pod is healthy." },
-      { type: "code", text: "kubectl rollout status deployment mariadb -n mariadb\nkubectl get pods -n mariadb" },
-    ],
+// ═══ EXAM DEFINITIONS ═══════════════════════════════════════
+const EXAMS = {
+  "CKA": {
+    name: "CKA",
+    fullName: "Certified Kubernetes Administrator",
+    repo: "kyle-heller/CKA-PREP-2025",
+    tests: { 1: { label: "All 17 Questions", start: 1, end: 17 } }
   },
+  "CKS": {
+    name: "CKS",
+    fullName: "Certified Kubernetes Security Specialist",
+    repo: "kyle-heller/CKS-PREP-2025",
+    tests: {
+      1: { label: "Test 1: Q01-Q18", start: 1, end: 18 },
+      2: { label: "Test 2: Q19-Q36", start: 19, end: 36 },
+      3: { label: "Test 3: Q37-Q54", start: 37, end: 54 },
+    }
+  }
+};
 
-  // ── Q2: ArgoCD Helm ──
-  {
-    id: 2, title: "ArgoCD Helm (No CRDs)", difficulty: "Easy",
-    scenario: [
-      { type: "narration", text: "Install Argo CD in a Kubernetes cluster using Helm." },
-      { type: "narration", text: "The CRDs are already pre-installed, so you must ensure Helm does not install them again." },
-      { type: "narration", text: "Add the official Argo CD Helm repo, generate a template from chart version 7.7.3, and save the output." },
-      { type: "narration", text: "The generated YAML manifest must be saved to /root/argo-helm.yaml." },
-    ],
-    concepts: [
-      { type: "narration", text: "This question tests your ability to use Helm template, not Helm install. The difference matters." },
-      { type: "narration", text: "Helm template renders the chart locally into plain YAML without talking to the cluster. Helm install actually deploys resources." },
-      { type: "narration", text: "The key value to set is crds.install=false. This tells the Argo CD chart to skip CRD manifests in the output." },
-      { type: "narration", text: "On the exam, pay close attention to whether they ask for helm template or helm install. They are very different operations." },
-      { type: "narration", text: "Always run helm repo update after adding a repo, or you may get stale chart versions." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Create the argocd namespace." },
-      { type: "code", text: "kubectl create namespace argocd" },
-      { type: "narration", text: "Step two. Add the Helm repo and update." },
-      { type: "code", text: "helm repo add argocd https://argoproj.github.io/argo-helm\nhelm repo update" },
-      { type: "narration", text: "Step three. Generate the template with CRDs disabled and save it." },
-      { type: "code", text: "helm template argocd argocd/argo-cd \\\n  --version 7.7.3 \\\n  --namespace argocd \\\n  --set crds.install=false \\\n  > /root/argo-helm.yaml" },
-      { type: "narration", text: "Step four. Verify no CRDs were included in the output." },
-      { type: "code", text: "grep -c 'CustomResourceDefinition' /root/argo-helm.yaml\n# should output 0" },
-    ],
-  },
+// helper: narration line
+function n(t){return{type:"narration",text:t}}
+// helper: code block
+function c(t){return{type:"code",text:t}}
 
-  // ── Q3: Sidecar Container ──
-  {
-    id: 3, title: "Sidecar Container", difficulty: "Easy",
-    scenario: [
-      { type: "narration", text: "There is an existing WordPress deployment that needs a sidecar container." },
-      { type: "narration", text: "Add a sidecar container named sidecar using the busybox stable image." },
-      { type: "narration", text: "The sidecar must tail the log file at /var/log/wordpress.log." },
-      { type: "narration", text: "Use a shared volume so both containers can access the same /var/log directory." },
-    ],
-    concepts: [
-      { type: "narration", text: "A sidecar is a helper container that runs alongside the main container in the same pod." },
-      { type: "narration", text: "The critical concept here is shared volumes. Containers in the same pod can share data through a volume mounted in both containers." },
-      { type: "narration", text: "An emptyDir volume is the simplest choice for sidecars. It's created when the pod starts and deleted when the pod is removed." },
-      { type: "narration", text: "On the exam, make sure both containers mount the same volume name at the correct path. A common mistake is forgetting the volumeMounts in one of the containers." },
-      { type: "narration", text: "The command format for busybox uses an array syntax. The command is /bin/sh with -c flag and the actual command as a string argument." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Edit the WordPress deployment to add an emptyDir volume and the sidecar container." },
-      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: wordpress\nspec:\n  template:\n    spec:\n      volumes:\n      - name: log\n        emptyDir: {}\n      containers:\n      - name: wordpress\n        volumeMounts:\n        - name: log\n          mountPath: /var/log\n      - name: sidecar\n        image: busybox:stable\n        command: [\"/bin/sh\", \"-c\", \"tail -f /var/log/wordpress.log\"]\n        volumeMounts:\n        - name: log\n          mountPath: /var/log\nEOF" },
-      { type: "narration", text: "Step two. Verify the deployment rolls out and both containers are running." },
-      { type: "code", text: "kubectl rollout status deployment wordpress\nkubectl get pods -l app=wordpress" },
-    ],
-  },
-
-  // ── Q4: Resource Allocation ──
-  {
-    id: 4, title: "Resource Allocation", difficulty: "Medium",
-    scenario: [
-      { type: "narration", text: "You are managing a WordPress application in the resources namespace." },
-      { type: "narration", text: "The deployment currently has 3 replicas but resources are not properly configured." },
-      { type: "narration", text: "You need to scale down to zero, divide node resources evenly across all 3 pods, then scale back up." },
-      { type: "narration", text: "Both init containers and main containers must use exactly the same resource requests and limits." },
-    ],
-    concepts: [
-      { type: "narration", text: "This question tests resource requests and limits, which are how Kubernetes manages CPU and memory allocation." },
-      { type: "narration", text: "Requests are what the scheduler guarantees. Limits are the maximum a container can use before it gets throttled or OOM-killed." },
-      { type: "narration", text: "The tricky part is figuring out the right values. You need to check the node's allocatable resources and divide by 3." },
-      { type: "narration", text: "Use kubectl describe node to find allocatable CPU and memory. Then leave some overhead for system pods." },
-      { type: "narration", text: "A common exam mistake is forgetting init containers. The question explicitly says init and main containers must have the same resources." },
-      { type: "narration", text: "Scale down first to avoid scheduling failures while you're editing the resource values." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Scale the deployment down to zero replicas." },
-      { type: "code", text: "kubectl scale deployment wordpress -n resources --replicas=0" },
-      { type: "narration", text: "Step two. Check the node's allocatable resources to calculate per-pod values." },
-      { type: "code", text: "kubectl describe node | grep -A 5 Allocatable" },
-      { type: "narration", text: "Step three. Edit the deployment. Set the same resource block on every container, including init containers." },
-      { type: "code", text: "kubectl edit deployment wordpress -n resources\n# Set on ALL containers and initContainers:\n# resources:\n#   requests:\n#     cpu: \"300m\"\n#     memory: \"600Mi\"\n#   limits:\n#     cpu: \"400m\"\n#     memory: \"700Mi\"" },
-      { type: "narration", text: "Step four. Scale back up and verify all 3 pods are running." },
-      { type: "code", text: "kubectl scale deployment wordpress -n resources --replicas=3\nkubectl rollout status deployment wordpress -n resources\nkubectl get pods -n resources" },
-    ],
-  },
-
-  // ── Q5: HPA ──
-  {
-    id: 5, title: "HorizontalPodAutoscaler", difficulty: "Medium",
-    scenario: [
-      { type: "narration", text: "Create a new HorizontalPodAutoscaler named apache-server in the autoscale namespace." },
-      { type: "narration", text: "Target the existing apache-deployment with 50% CPU utilization." },
-      { type: "narration", text: "Configure minimum 1 pod and maximum 4 pods." },
-      { type: "narration", text: "Set the downscale stabilization window to 30 seconds." },
-    ],
-    concepts: [
-      { type: "narration", text: "An HPA automatically scales the number of pod replicas based on observed metrics like CPU utilization." },
-      { type: "narration", text: "The autoscaling/v2 API is the current version. The older v1 API does not support behavior configuration." },
-      { type: "narration", text: "The downscale stabilization window prevents rapid scale-down. It says: wait this many seconds before removing pods, even if the metric is below target." },
-      { type: "narration", text: "On the exam, you need the metrics-server running for HPA to work. It's usually pre-installed." },
-      { type: "narration", text: "A common mistake is using the wrong API version. If the question asks for behavior configuration, you must use autoscaling/v2." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Create the HPA manifest using the autoscaling v2 API." },
-      { type: "code", text: "cat <<'EOF' > hpa.yaml\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: apache-server\n  namespace: autoscale\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: apache-deployment\n  minReplicas: 1\n  maxReplicas: 4\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 50\n  behavior:\n    scaleDown:\n      stabilizationWindowSeconds: 30\nEOF\nkubectl apply -f hpa.yaml" },
-      { type: "narration", text: "Step two. Verify the HPA is created and targeting the correct deployment." },
-      { type: "code", text: "kubectl get hpa -n autoscale\nkubectl describe hpa apache-server -n autoscale" },
-    ],
-  },
-
-  // ── Q6: CRDs (cert-manager) ──
-  {
-    id: 6, title: "CRDs (cert-manager)", difficulty: "Easy",
-    scenario: [
-      { type: "narration", text: "Cert-manager CRDs are already installed in the cluster." },
-      { type: "narration", text: "List all cert-manager CRDs and save them to /root/resources.yaml." },
-      { type: "narration", text: "Then extract the documentation for the subject field of the Certificate Custom Resource." },
-      { type: "narration", text: "Save that documentation to /root/subject.yaml." },
-    ],
-    concepts: [
-      { type: "narration", text: "CRDs, or Custom Resource Definitions, extend the Kubernetes API with new resource types." },
-      { type: "narration", text: "kubectl explain is the key command here. It works on CRDs just like built-in resources." },
-      { type: "narration", text: "You can drill into nested fields with dot notation. For example, certificate.spec.subject." },
-      { type: "narration", text: "On the exam, you can use kubectl get crd with grep to filter CRDs by a specific project name." },
-      { type: "narration", text: "This is a straightforward question, but read carefully whether they want just a list or full YAML output." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. List all cert-manager CRDs and save to file." },
-      { type: "code", text: "kubectl get crd | grep cert-manager > /root/resources.yaml\ncat /root/resources.yaml" },
-      { type: "narration", text: "Step two. Extract the subject field documentation using kubectl explain." },
-      { type: "code", text: "kubectl explain certificate.spec.subject > /root/subject.yaml\ncat /root/subject.yaml" },
-    ],
-  },
-
-  // ── Q7: PriorityClass ──
-  {
-    id: 7, title: "PriorityClass", difficulty: "Easy",
-    scenario: [
-      { type: "narration", text: "There is an existing deployment called busybox-logger in the priority namespace." },
-      { type: "narration", text: "The cluster already has at least one user-defined PriorityClass." },
-      { type: "narration", text: "Create a new PriorityClass named high-priority with a value exactly one less than the highest existing user-defined priority class." },
-      { type: "narration", text: "Then patch the busybox-logger deployment to use this new priority class." },
-    ],
-    concepts: [
-      { type: "narration", text: "PriorityClasses determine which pods get scheduled first when resources are scarce." },
-      { type: "narration", text: "Higher values mean higher priority. The system PriorityClasses like system-node-critical have very high values." },
-      { type: "narration", text: "The question says user-defined, so ignore the built-in system classes. Look for classes without the system prefix." },
-      { type: "narration", text: "Setting priorityClassName in the pod spec is done through the deployment template spec, not the deployment spec itself." },
-      { type: "narration", text: "On the exam, always check existing PriorityClasses first with kubectl get pc, so you know what value to use." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Check existing PriorityClasses to find the highest user-defined value." },
-      { type: "code", text: "kubectl get priorityclass" },
-      { type: "narration", text: "Step two. Create the high-priority class with value one less than the highest." },
-      { type: "code", text: "kubectl create priorityclass high-priority \\\n  --value=999 \\\n  --description=\"high priority\"" },
-      { type: "narration", text: "Step three. Patch the deployment to use the new priority class." },
-      { type: "code", text: "kubectl patch deployment busybox-logger -n priority \\\n  -p '{\"spec\":{\"template\":{\"spec\":{\"priorityClassName\":\"high-priority\"}}}}'" },
-      { type: "narration", text: "Step four. Verify the patch was applied." },
-      { type: "code", text: "kubectl get pc\nkubectl describe deployment busybox-logger -n priority | grep -i priority" },
-    ],
-  },
-
-  // ── Q8: CNI & Network Policy ──
-  {
-    id: 8, title: "CNI & Network Policy", difficulty: "Easy",
-    scenario: [
-      { type: "narration", text: "Install and configure a Container Network Interface plugin that meets the cluster requirements." },
-      { type: "narration", text: "Pods must be able to communicate with each other." },
-      { type: "narration", text: "The CNI must support Network Policy enforcement." },
-      { type: "narration", text: "You can choose between Flannel or Calico. Install from the provided manifest URL." },
-    ],
-    concepts: [
-      { type: "narration", text: "A CNI plugin provides the networking layer for pods. Without a CNI, pods cannot communicate and nodes will show as NotReady." },
-      { type: "narration", text: "Not all CNIs support NetworkPolicy. Flannel does not support it natively. Calico and Cilium do." },
-      { type: "narration", text: "Since the question requires NetworkPolicy support, you must choose Calico, not Flannel." },
-      { type: "narration", text: "On the KillerCoda exam environment, Cilium may already be installed. Always check first with kubectl get pods in kube-system." },
-      { type: "narration", text: "On the real exam, if nodes show NotReady, installing the CNI is your first step before anything else works." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Check if a CNI is already installed." },
-      { type: "code", text: "kubectl get nodes\nkubectl get pods -n kube-system | grep -E 'cilium|calico|flannel'" },
-      { type: "narration", text: "Step two. If no CNI is installed, install Calico since it supports NetworkPolicy." },
-      { type: "code", text: "kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/tigera-operator.yaml" },
-      { type: "narration", text: "Step three. Wait for calico pods to be ready and nodes to show Ready status." },
-      { type: "code", text: "kubectl get pods -n tigera-operator\nkubectl get pods -n calico-system\nkubectl get nodes" },
-    ],
-  },
-
-  // ── Q9: CRI-Dockerd ──
-  {
-    id: 9, title: "CRI-Dockerd", difficulty: "Medium",
-    scenario: [
-      { type: "narration", text: "Install the CRI Docker daemon package from a local .deb file." },
-      { type: "narration", text: "Enable and start the cri-docker service." },
-      { type: "narration", text: "Configure four specific sysctl kernel parameters for container networking." },
-      { type: "narration", text: "The parameters include bridge netfilter, IPv6 forwarding, IPv4 forwarding, and conntrack max." },
-    ],
-    concepts: [
-      { type: "narration", text: "CRI-dockerd is a shim that allows Docker to be used as a Container Runtime Interface in Kubernetes." },
-      { type: "narration", text: "Since Kubernetes 1.24, dockershim was removed from kubelet. CRI-dockerd replaces it for Docker users." },
-      { type: "narration", text: "The sysctl parameters are critical for container networking. bridge-nf-call-iptables lets iptables see bridged traffic. ip_forward enables routing between containers." },
-      { type: "narration", text: "Always use sysctl --system after writing the config file to apply changes immediately without a reboot." },
-      { type: "narration", text: "On the exam, use systemctl enable --now to both enable and start a service in a single command." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Install the deb package and enable the service." },
-      { type: "code", text: "sudo dpkg -i /root/cri-dockerd.deb\nsudo systemctl enable --now cri-docker.service\nsudo systemctl status cri-docker.service" },
-      { type: "narration", text: "Step two. Write the sysctl configuration file." },
-      { type: "code", text: "sudo tee /etc/sysctl.d/kube.conf >/dev/null <<'EOF'\nnet.bridge.bridge-nf-call-iptables=1\nnet.ipv6.conf.all.forwarding=1\nnet.ipv4.ip_forward=1\nnet.netfilter.nf_conntrack_max=131072\nEOF\nsudo sysctl --system" },
-      { type: "narration", text: "Step three. Verify all four parameters are correctly set." },
-      { type: "code", text: "sysctl net.bridge.bridge-nf-call-iptables\nsysctl net.ipv6.conf.all.forwarding\nsysctl net.ipv4.ip_forward\nsysctl net.netfilter.nf_conntrack_max" },
-    ],
-  },
-
-  // ── Q10: Taints & Tolerations ──
-  {
-    id: 10, title: "Taints & Tolerations", difficulty: "Easy",
-    scenario: [
-      { type: "narration", text: "Taint node01 so that no normal pods can be scheduled on it." },
-      { type: "narration", text: "The taint key is PERMISSION, the value is granted, and the effect is NoSchedule." },
-      { type: "narration", text: "Then create a pod named nginx that can tolerate the taint and schedule on node01." },
-    ],
-    concepts: [
-      { type: "narration", text: "Taints and tolerations work together. A taint on a node repels pods. A toleration on a pod allows it to schedule on a tainted node." },
-      { type: "narration", text: "There are three taint effects: NoSchedule prevents scheduling, PreferNoSchedule is a soft preference, and NoExecute evicts existing pods." },
-      { type: "narration", text: "The toleration must match the taint exactly: same key, same value, same effect." },
-      { type: "narration", text: "Note that tolerations alone don't guarantee scheduling on a specific node. They just allow it. For guaranteed placement, combine with nodeSelector or nodeAffinity." },
-      { type: "narration", text: "On the exam, remember the taint command format: kubectl taint nodes <node> key=value:effect." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Apply the taint to node01." },
-      { type: "code", text: "kubectl taint nodes node01 PERMISSION=granted:NoSchedule" },
-      { type: "narration", text: "Step two. Create the nginx pod with a matching toleration." },
-      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: v1\nkind: Pod\nmetadata:\n  name: nginx\nspec:\n  containers:\n  - name: nginx\n    image: nginx\n  tolerations:\n  - key: PERMISSION\n    operator: Equal\n    value: granted\n    effect: NoSchedule\nEOF" },
-      { type: "narration", text: "Step three. Verify the pod is running on node01." },
-      { type: "code", text: "kubectl get pods -o wide" },
-    ],
-  },
-
-  // ── Q11: Gateway API Migration ──
-  {
-    id: 11, title: "Gateway API Migration", difficulty: "Medium",
-    scenario: [
-      { type: "narration", text: "There is an existing web application using an Ingress resource named web." },
-      { type: "narration", text: "You must migrate this Ingress configuration to the new Kubernetes Gateway API." },
-      { type: "narration", text: "Create a Gateway named web-gateway and an HTTPRoute named web-route." },
-      { type: "narration", text: "Both must use the hostname gateway.web.k8s.local and maintain the existing TLS configuration." },
-      { type: "narration", text: "A GatewayClass named nginx-class is already installed." },
-    ],
-    concepts: [
-      { type: "narration", text: "The Gateway API is the successor to Ingress. It separates infrastructure concerns from routing concerns." },
-      { type: "narration", text: "A GatewayClass defines the controller, like an IngressClass. A Gateway defines listeners and TLS termination. An HTTPRoute defines the actual routing rules." },
-      { type: "narration", text: "The migration pattern is: Ingress TLS section maps to Gateway listeners, and Ingress rules map to HTTPRoute rules." },
-      { type: "narration", text: "Always inspect the existing Ingress first with kubectl describe ingress to understand what you need to replicate." },
-      { type: "narration", text: "The HTTPRoute references the Gateway via parentRefs. The Gateway references the GatewayClass via gatewayClassName." },
-      { type: "narration", text: "On the exam, Gateway API is a newer topic. Know the three-tier model: GatewayClass, Gateway, HTTPRoute." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Inspect the existing Ingress to understand the current configuration." },
-      { type: "code", text: "kubectl describe ingress web" },
-      { type: "narration", text: "Step two. Create the Gateway with HTTPS listener and TLS termination." },
-      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: gateway.networking.k8s.io/v1\nkind: Gateway\nmetadata:\n  name: web-gateway\nspec:\n  gatewayClassName: nginx-class\n  listeners:\n  - name: https\n    protocol: HTTPS\n    port: 443\n    hostname: gateway.web.k8s.local\n    tls:\n      mode: Terminate\n      certificateRefs:\n      - kind: Secret\n        name: web-tls\nEOF" },
-      { type: "narration", text: "Step three. Create the HTTPRoute that references the Gateway." },
-      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: gateway.networking.k8s.io/v1\nkind: HTTPRoute\nmetadata:\n  name: web-route\nspec:\n  parentRefs:\n  - name: web-gateway\n  hostnames:\n  - \"gateway.web.k8s.local\"\n  rules:\n  - matches:\n    - path:\n        type: PathPrefix\n        value: /\n    backendRefs:\n    - name: web-service\n      port: 80\nEOF" },
-      { type: "narration", text: "Step four. Verify both resources are created." },
-      { type: "code", text: "kubectl get gateway,httproute" },
-    ],
-  },
-
-  // ── Q12: Ingress ──
-  {
-    id: 12, title: "Ingress", difficulty: "Easy",
-    scenario: [
-      { type: "narration", text: "There is an existing deployment named echo in the echo-sound namespace." },
-      { type: "narration", text: "Expose it with a NodePort service called echo-service on port 8080." },
-      { type: "narration", text: "Then create an Ingress resource named echo for the host example.org with path /echo." },
-    ],
-    concepts: [
-      { type: "narration", text: "Ingress exposes HTTP and HTTPS routes from outside the cluster to services inside the cluster." },
-      { type: "narration", text: "An Ingress needs a backend service to route traffic to. That's why you create the service first." },
-      { type: "narration", text: "The pathType field is required. Use Prefix for path-based routing or Exact for exact matches." },
-      { type: "narration", text: "On the exam, always match the service port in the Ingress backend to the service's port, not the container's targetPort." },
-      { type: "narration", text: "kubectl expose is a quick way to create a service without writing YAML from scratch." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Expose the deployment as a NodePort service." },
-      { type: "code", text: "kubectl expose deployment echo -n echo-sound \\\n  --name echo-service --type NodePort \\\n  --port 8080 --target-port 8080" },
-      { type: "narration", text: "Step two. Create the Ingress resource." },
-      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: echo\n  namespace: echo-sound\nspec:\n  rules:\n  - host: example.org\n    http:\n      paths:\n      - path: /echo\n        pathType: Prefix\n        backend:\n          service:\n            name: echo-service\n            port:\n              number: 8080\nEOF" },
-      { type: "narration", text: "Step three. Verify the Ingress and service are created." },
-      { type: "code", text: "kubectl get ingress,svc -n echo-sound" },
-    ],
-  },
-
-  // ── Q13: Network Policy (Least-Permissive) ──
-  {
-    id: 13, title: "Network Policy (Least-Permissive)", difficulty: "Medium",
-    scenario: [
-      { type: "narration", text: "There are two deployments: Frontend in the frontend namespace and Backend in the backend namespace." },
-      { type: "narration", text: "Three Network Policy YAML files are available in /root/network-policies/." },
-      { type: "narration", text: "You must determine which policy allows interaction between frontend and backend in the least permissive way." },
-      { type: "narration", text: "Deploy only the correct, most restrictive policy." },
-    ],
-    concepts: [
-      { type: "narration", text: "NetworkPolicies are like firewall rules for pods. By default, all traffic is allowed. Once you apply a policy, only explicitly allowed traffic is permitted." },
-      { type: "narration", text: "The principle of least privilege means: allow only what is needed, nothing more." },
-      { type: "narration", text: "When comparing policies, look for the one that is most specific. A policy allowing all ingress is too broad. A policy allowing only specific namespaces and pods is more restrictive." },
-      { type: "narration", text: "On the exam, read each policy carefully. Check the namespace selectors, pod selectors, and any IP ranges." },
-      { type: "narration", text: "An extra IP block in a policy that isn't needed makes it more permissive than necessary. Choose the policy without unnecessary exceptions." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Read all three policies and compare their rules." },
-      { type: "code", text: "ls /root/network-policies/\ncat /root/network-policies/network-policy-1.yaml\ncat /root/network-policies/network-policy-2.yaml\ncat /root/network-policies/network-policy-3.yaml" },
-      { type: "narration", text: "Policy 1 allows all ingress. Too permissive. Policy 2 allows frontend namespace plus an IP block. Unnecessary extra access. Policy 3 allows only frontend namespace and frontend pods. This is the most restrictive." },
-      { type: "narration", text: "Step two. Apply the least permissive policy." },
-      { type: "code", text: "kubectl apply -f /root/network-policies/network-policy-3.yaml" },
-      { type: "narration", text: "Step three. Verify the policy is applied." },
-      { type: "code", text: "kubectl get networkpolicy -n backend\nkubectl describe networkpolicy -n backend" },
-    ],
-  },
-
-  // ── Q14: StorageClass ──
-  {
-    id: 14, title: "StorageClass", difficulty: "Easy",
-    scenario: [
-      { type: "narration", text: "Create a new StorageClass named local-storage with the rancher.io/local-path provisioner." },
-      { type: "narration", text: "Set VolumeBindingMode to WaitForFirstConsumer." },
-      { type: "narration", text: "Then patch it to be the default StorageClass." },
-      { type: "narration", text: "Ensure it is the only default StorageClass in the cluster." },
-    ],
-    concepts: [
-      { type: "narration", text: "A StorageClass provides a way for administrators to describe storage profiles. Think of it as a template for provisioning volumes." },
-      { type: "narration", text: "WaitForFirstConsumer delays volume binding until a pod using the PVC is scheduled. This ensures the volume is created on the correct node." },
-      { type: "narration", text: "The default StorageClass is set via an annotation: storageclass.kubernetes.io/is-default-class set to true." },
-      { type: "narration", text: "Only one StorageClass should be default. If you're making a new one default, remove the annotation from the old default." },
-      { type: "narration", text: "On the exam, check existing StorageClasses first to know which one is currently the default." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Create the StorageClass without making it default yet." },
-      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: local-storage\n  annotations:\n    storageclass.kubernetes.io/is-default-class: \"false\"\nprovisioner: rancher.io/local-path\nvolumeBindingMode: WaitForFirstConsumer\nEOF" },
-      { type: "narration", text: "Step two. Patch it to become the default." },
-      { type: "code", text: "kubectl patch storageclass local-storage -p \\\n  '{\"metadata\":{\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}'" },
-      { type: "narration", text: "Step three. Remove default from the old StorageClass if one exists." },
-      { type: "code", text: "kubectl patch storageclass local-path -p \\\n  '{\"metadata\":{\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"false\"}}}' 2>/dev/null || true" },
-      { type: "narration", text: "Step four. Verify local-storage is the only default." },
-      { type: "code", text: "kubectl get sc" },
-    ],
-  },
-
-  // ── Q15: Etcd Fix (API Server Broken) ──
-  {
-    id: 15, title: "Etcd Fix (API Server Broken)", difficulty: "Hard",
-    scenario: [
-      { type: "narration", text: "After a cluster migration, the controlplane kube-apiserver is not coming up." },
-      { type: "narration", text: "Before migration, etcd was external and in high availability mode." },
-      { type: "narration", text: "After migration, the kube-apiserver was left pointing to the etcd peer port 2380 instead of the client port 2379." },
-      { type: "narration", text: "You must fix the configuration so the API server connects to etcd correctly." },
-    ],
-    concepts: [
-      { type: "narration", text: "This is the only hard question on the exam. It tests your understanding of static pods and etcd configuration." },
-      { type: "narration", text: "The kube-apiserver runs as a static pod. Its manifest lives at /etc/kubernetes/manifests/kube-apiserver.yaml." },
-      { type: "narration", text: "Etcd uses two ports. Port 2379 is the client port, used by the API server to read and write data. Port 2380 is the peer port, used for etcd-to-etcd replication." },
-      { type: "narration", text: "When you edit a static pod manifest, kubelet automatically detects the change and restarts the pod. No kubectl command needed." },
-      { type: "narration", text: "Since the API server is down, kubectl commands won't work until you fix this. You must edit the file directly on the control plane node." },
-      { type: "narration", text: "On the exam, if the API server is broken, don't panic. Check the static pod manifests first. That's usually where the issue is." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Check the current etcd server URL in the API server manifest." },
-      { type: "code", text: "sudo grep 'etcd-servers' /etc/kubernetes/manifests/kube-apiserver.yaml" },
-      { type: "narration", text: "You'll see it points to port 2380. That's the peer port. It should be 2379, the client port." },
-      { type: "narration", text: "Step two. Fix the port from 2380 to 2379." },
-      { type: "code", text: "sudo sed -i 's/:2380/:2379/g' /etc/kubernetes/manifests/kube-apiserver.yaml" },
-      { type: "narration", text: "Step three. Wait about 30 seconds for kubelet to detect the change and restart the API server." },
-      { type: "code", text: "sleep 30\nkubectl get nodes" },
-      { type: "narration", text: "If kubectl works and nodes show Ready, the fix is confirmed. This is the fastest question to solve if you know where to look." },
-    ],
-  },
-
-  // ── Q16: NodePort Service ──
-  {
-    id: 16, title: "NodePort Service", difficulty: "Easy",
-    scenario: [
-      { type: "narration", text: "There is a deployment named nodeport-deployment in the relative namespace." },
-      { type: "narration", text: "Configure the deployment so it exposes port 80 with name http and protocol TCP." },
-      { type: "narration", text: "Then create a NodePort Service named nodeport-service that maps port 80 to NodePort 30080." },
-    ],
-    concepts: [
-      { type: "narration", text: "A NodePort service exposes a service on a static port on every node in the cluster." },
-      { type: "narration", text: "There are three port concepts: port is the service port, targetPort is the container port, and nodePort is the external port on the node." },
-      { type: "narration", text: "The NodePort range is 30000 to 32767 by default. Anything outside this range will fail." },
-      { type: "narration", text: "The service selector must match the pod labels. Check the deployment's pod template labels to get the right selector." },
-      { type: "narration", text: "On the exam, adding a named containerPort to the deployment isn't strictly required for the service to work, but the question asks for it explicitly." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Patch the deployment to add the named container port." },
-      { type: "code", text: "kubectl patch deployment nodeport-deployment -n relative -p '{\n  \"spec\":{\"template\":{\"spec\":{\"containers\":[{\n    \"name\":\"nginx\",\n    \"ports\":[{\"name\":\"http\",\"containerPort\":80,\"protocol\":\"TCP\"}]\n  }]}}}}'" },
-      { type: "narration", text: "Step two. Create the NodePort service." },
-      { type: "code", text: "cat <<'EOF' | kubectl apply -f -\napiVersion: v1\nkind: Service\nmetadata:\n  name: nodeport-service\n  namespace: relative\nspec:\n  type: NodePort\n  selector:\n    app: nodeport-deployment\n  ports:\n  - port: 80\n    targetPort: 80\n    protocol: TCP\n    nodePort: 30080\nEOF" },
-      { type: "narration", text: "Step three. Verify the service is created with the correct NodePort." },
-      { type: "code", text: "kubectl get svc nodeport-service -n relative" },
-    ],
-  },
-
-  // ── Q17: TLS Configuration ──
-  {
-    id: 17, title: "TLS Configuration", difficulty: "Medium",
-    scenario: [
-      { type: "narration", text: "There is an existing deployment in the nginx-static namespace." },
-      { type: "narration", text: "A ConfigMap provides the nginx TLS configuration, currently supporting both TLS 1.2 and TLS 1.3." },
-      { type: "narration", text: "You must edit the ConfigMap to only allow TLS 1.3, then add a DNS entry to /etc/hosts and verify." },
-    ],
-    concepts: [
-      { type: "narration", text: "TLS, or Transport Layer Security, encrypts traffic between client and server. TLS 1.3 is the latest and most secure version." },
-      { type: "narration", text: "In nginx, the ssl_protocols directive controls which TLS versions are accepted. Removing TLS v1.2 from the directive forces TLS 1.3 only." },
-      { type: "narration", text: "After changing a ConfigMap, you need to restart the pods that use it. The easiest way is kubectl rollout restart." },
-      { type: "narration", text: "The verification uses curl with specific TLS flags. The --tls-max 1.2 flag should fail, and --tlsv1.3 should succeed." },
-      { type: "narration", text: "On the exam, don't forget to add the service IP to /etc/hosts. Without it, the hostname won't resolve." },
-    ],
-    solution: [
-      { type: "narration", text: "Step one. Edit the ConfigMap to remove TLS v1.2 from the ssl_protocols directive." },
-      { type: "code", text: "kubectl get configmap nginx-config -n nginx-static -o yaml | \\\n  sed 's/ssl_protocols TLSv1.2 TLSv1.3;/ssl_protocols TLSv1.3;/' | \\\n  kubectl apply -f -" },
-      { type: "narration", text: "Step two. Get the service ClusterIP and add it to /etc/hosts." },
-      { type: "code", text: "SVC_IP=$(kubectl get svc nginx-static -n nginx-static \\\n  -o jsonpath='{.spec.clusterIP}')\necho \"$SVC_IP ckaquestion.k8s.local\" >> /etc/hosts" },
-      { type: "narration", text: "Step three. Restart the deployment to pick up the new ConfigMap." },
-      { type: "code", text: "kubectl rollout restart -n nginx-static deployment nginx-static\nkubectl rollout status -n nginx-static deployment nginx-static" },
-      { type: "narration", text: "Step four. Verify TLS 1.2 is rejected and TLS 1.3 works." },
-      { type: "code", text: "curl -vk --tls-max 1.2 https://ckaquestion.k8s.local  # should fail\ncurl -vk --tlsv1.3 https://ckaquestion.k8s.local     # should work" },
-    ],
-  },
+// ═══ CKA QUESTIONS ══════════════════════════════════════════
+const CKA_QUESTIONS=[
+{id:1,title:"MariaDB Persistent Volume",difficulty:"Medium",
+scenario:[n("A user accidentally deleted the MariaDB Deployment in the mariadb namespace."),n("The deployment was configured with persistent storage."),n("Your job is to re-establish the deployment while preserving data by reusing the available PersistentVolume."),n("A PersistentVolume already exists and is retained for reuse. Only one PV exists in the cluster."),n("You need to create a PVC named mariadb, fix the deployment manifest, and apply it.")],
+concepts:[n("This question tests PersistentVolumes and PersistentVolumeClaims, which are core storage concepts in Kubernetes."),n("A PersistentVolume is a cluster-level storage resource. A PersistentVolumeClaim is a namespace-level request for storage."),n("When a PV has a Retain reclaim policy, deleting the PVC does not delete the underlying data."),n("The key gotcha here is setting storageClassName to an empty string. This tells Kubernetes to bind to an existing PV without a storage class."),n("If you forget the empty storageClassName, the PVC might bind to the default storage class and provision a brand new volume, losing access to the old data."),n("On the exam, always check the existing PV first with kubectl get pv to understand its capacity, access modes, and current status.")],
+solution:[n("Step one. Create the PersistentVolumeClaim. Note the empty storageClassName."),c("cat <<'EOF' > pvc.yaml\napiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: mariadb\n  namespace: mariadb\nspec:\n  storageClassName: \"\"\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 250Mi\nEOF\nkubectl apply -f pvc.yaml"),n("Step two. Verify the PVC is bound to the existing PV."),c("kubectl get pvc mariadb -n mariadb\nkubectl get pv"),n("Step three. Fix the deployment manifest by filling in the claimName, then apply it."),c("sed -i 's/claimName: \"\"/claimName: \"mariadb\"/' ~/mariadb-deploy.yaml\nkubectl apply -f ~/mariadb-deploy.yaml"),n("Step four. Verify the deployment is running and the pod is healthy."),c("kubectl rollout status deployment mariadb -n mariadb\nkubectl get pods -n mariadb")]},
+{id:2,title:"ArgoCD Helm (No CRDs)",difficulty:"Easy",
+scenario:[n("Install Argo CD in a Kubernetes cluster using Helm."),n("The CRDs are already pre-installed, so you must ensure Helm does not install them again."),n("Add the official Argo CD Helm repo, generate a template from chart version 7.7.3, and save the output."),n("The generated YAML manifest must be saved to /root/argo-helm.yaml.")],
+concepts:[n("This question tests your ability to use Helm template, not Helm install. The difference matters."),n("Helm template renders the chart locally into plain YAML without talking to the cluster. Helm install actually deploys resources."),n("The key value to set is crds.install=false. This tells the Argo CD chart to skip CRD manifests in the output."),n("On the exam, pay close attention to whether they ask for helm template or helm install."),n("Always run helm repo update after adding a repo, or you may get stale chart versions.")],
+solution:[n("Step one. Create the argocd namespace."),c("kubectl create namespace argocd"),n("Step two. Add the Helm repo and update."),c("helm repo add argocd https://argoproj.github.io/argo-helm\nhelm repo update"),n("Step three. Generate the template with CRDs disabled and save it."),c("helm template argocd argocd/argo-cd \\\n  --version 7.7.3 \\\n  --namespace argocd \\\n  --set crds.install=false \\\n  > /root/argo-helm.yaml"),n("Step four. Verify no CRDs were included."),c("grep -c 'CustomResourceDefinition' /root/argo-helm.yaml\n# should output 0")]},
+{id:3,title:"Sidecar Container",difficulty:"Easy",scenario:[n("There is an existing WordPress deployment that needs a sidecar container."),n("Add a sidecar container named sidecar using the busybox stable image."),n("The sidecar must tail the log file at /var/log/wordpress.log."),n("Use a shared volume so both containers can access the same /var/log directory.")],concepts:[n("A sidecar is a helper container that runs alongside the main container in the same pod."),n("The critical concept is shared volumes. Containers in the same pod share data through a volume mounted in both."),n("An emptyDir volume is the simplest choice. It's created when the pod starts and deleted when the pod is removed."),n("On the exam, make sure both containers mount the same volume name at the correct path."),n("The command format for busybox uses array syntax. The command is /bin/sh with -c flag and the command as a string.")],solution:[n("Step one. Edit the WordPress deployment to add an emptyDir volume and the sidecar container."),c("cat <<'EOF' | kubectl apply -f -\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: wordpress\nspec:\n  template:\n    spec:\n      volumes:\n      - name: log\n        emptyDir: {}\n      containers:\n      - name: wordpress\n        volumeMounts:\n        - name: log\n          mountPath: /var/log\n      - name: sidecar\n        image: busybox:stable\n        command: [\"/bin/sh\", \"-c\", \"tail -f /var/log/wordpress.log\"]\n        volumeMounts:\n        - name: log\n          mountPath: /var/log\nEOF"),n("Step two. Verify the deployment rolls out and both containers are running."),c("kubectl rollout status deployment wordpress\nkubectl get pods -l app=wordpress")]},
+{id:4,title:"Resource Allocation",difficulty:"Medium",scenario:[n("You are managing a WordPress application in the resources namespace."),n("The deployment has 3 replicas but resources are not properly configured."),n("Scale down to zero, divide node resources evenly across all 3 pods, then scale back up."),n("Both init containers and main containers must use exactly the same resource requests and limits.")],concepts:[n("This question tests resource requests and limits, which are how Kubernetes manages CPU and memory allocation."),n("Requests are what the scheduler guarantees. Limits are the maximum before throttling or OOM-kill."),n("Use kubectl describe node to find allocatable CPU and memory. Then divide by 3 with some overhead."),n("A common exam mistake is forgetting init containers. The question explicitly says they must have the same resources."),n("Scale down first to avoid scheduling failures while editing resource values.")],solution:[n("Step one. Scale the deployment down to zero."),c("kubectl scale deployment wordpress -n resources --replicas=0"),n("Step two. Check the node's allocatable resources."),c("kubectl describe node | grep -A 5 Allocatable"),n("Step three. Edit the deployment. Set the same resource block on every container including init containers."),c("kubectl edit deployment wordpress -n resources\n# Set on ALL containers and initContainers:\n# resources:\n#   requests:\n#     cpu: \"300m\"\n#     memory: \"600Mi\"\n#   limits:\n#     cpu: \"400m\"\n#     memory: \"700Mi\""),n("Step four. Scale back up and verify."),c("kubectl scale deployment wordpress -n resources --replicas=3\nkubectl rollout status deployment wordpress -n resources")]},
+{id:5,title:"HorizontalPodAutoscaler",difficulty:"Medium",scenario:[n("Create a new HorizontalPodAutoscaler named apache-server in the autoscale namespace."),n("Target the existing apache-deployment with 50% CPU utilization."),n("Configure minimum 1 pod and maximum 4 pods."),n("Set the downscale stabilization window to 30 seconds.")],concepts:[n("An HPA automatically scales pod replicas based on observed metrics like CPU."),n("The autoscaling/v2 API is required for behavior configuration. The older v1 doesn't support it."),n("The stabilization window prevents rapid scale-down. It says wait this many seconds before removing pods."),n("On the exam, metrics-server must be running for HPA to work. It's usually pre-installed.")],solution:[n("Step one. Create the HPA manifest using autoscaling v2."),c("cat <<'EOF' > hpa.yaml\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: apache-server\n  namespace: autoscale\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: apache-deployment\n  minReplicas: 1\n  maxReplicas: 4\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 50\n  behavior:\n    scaleDown:\n      stabilizationWindowSeconds: 30\nEOF\nkubectl apply -f hpa.yaml"),n("Step two. Verify the HPA."),c("kubectl get hpa -n autoscale")]},
+{id:6,title:"CRDs (cert-manager)",difficulty:"Easy",scenario:[n("Cert-manager CRDs are installed in the cluster."),n("List all cert-manager CRDs and save them to /root/resources.yaml."),n("Extract the documentation for the subject field of the Certificate Custom Resource."),n("Save that documentation to /root/subject.yaml.")],concepts:[n("CRDs extend the Kubernetes API with new resource types."),n("kubectl explain works on CRDs just like built-in resources."),n("You can drill into nested fields with dot notation, like certificate.spec.subject."),n("Use kubectl get crd with grep to filter CRDs by project name.")],solution:[n("Step one. List cert-manager CRDs."),c("kubectl get crd | grep cert-manager > /root/resources.yaml"),n("Step two. Extract the subject field documentation."),c("kubectl explain certificate.spec.subject > /root/subject.yaml")]},
+{id:7,title:"PriorityClass",difficulty:"Easy",scenario:[n("There is a deployment called busybox-logger in the priority namespace."),n("The cluster has at least one user-defined PriorityClass."),n("Create high-priority with a value exactly one less than the highest existing user-defined class."),n("Patch the busybox-logger deployment to use this new priority class.")],concepts:[n("PriorityClasses determine which pods get scheduled first when resources are scarce."),n("Higher values mean higher priority. Ignore system classes and focus on user-defined ones."),n("Setting priorityClassName goes in the pod template spec, not the deployment spec itself."),n("Always check existing PriorityClasses first with kubectl get pc.")],solution:[n("Step one. Check existing PriorityClasses."),c("kubectl get priorityclass"),n("Step two. Create high-priority with value one less than highest."),c("kubectl create priorityclass high-priority --value=999 --description=\"high priority\""),n("Step three. Patch the deployment."),c("kubectl patch deployment busybox-logger -n priority \\\n  -p '{\"spec\":{\"template\":{\"spec\":{\"priorityClassName\":\"high-priority\"}}}}'"),n("Step four. Verify."),c("kubectl get pc\nkubectl describe deployment busybox-logger -n priority | grep -i priority")]},
+{id:8,title:"CNI & Network Policy",difficulty:"Easy",scenario:[n("Install and configure a CNI plugin that supports NetworkPolicy enforcement."),n("Pods must be able to communicate with each other."),n("Choose between Flannel or Calico and install from a provided manifest URL.")],concepts:[n("A CNI plugin provides the networking layer for pods. Without one, nodes show NotReady."),n("Not all CNIs support NetworkPolicy. Flannel does not. Calico and Cilium do."),n("Since the question requires NetworkPolicy support, choose Calico, not Flannel."),n("On KillerCoda, Cilium may already be installed. Always check first.")],solution:[n("Step one. Check if a CNI is already installed."),c("kubectl get nodes\nkubectl get pods -n kube-system | grep -E 'cilium|calico|flannel'"),n("Step two. If needed, install Calico."),c("kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/tigera-operator.yaml"),n("Step three. Wait and verify."),c("kubectl get pods -n calico-system\nkubectl get nodes")]},
+{id:9,title:"CRI-Dockerd",difficulty:"Medium",scenario:[n("Install the CRI Docker daemon package from a local deb file."),n("Enable and start the cri-docker service."),n("Configure four sysctl kernel parameters for container networking.")],concepts:[n("CRI-dockerd is a shim that lets Docker work as a Container Runtime Interface in Kubernetes."),n("Since Kubernetes 1.24, dockershim was removed. CRI-dockerd replaces it."),n("The sysctl parameters are critical. bridge-nf-call-iptables lets iptables see bridged traffic. ip_forward enables routing."),n("Use sysctl --system after writing the config to apply changes immediately.")],solution:[n("Step one. Install and enable the service."),c("sudo dpkg -i /root/cri-dockerd.deb\nsudo systemctl enable --now cri-docker.service"),n("Step two. Write the sysctl config."),c("sudo tee /etc/sysctl.d/kube.conf >/dev/null <<'EOF'\nnet.bridge.bridge-nf-call-iptables=1\nnet.ipv6.conf.all.forwarding=1\nnet.ipv4.ip_forward=1\nnet.netfilter.nf_conntrack_max=131072\nEOF\nsudo sysctl --system"),n("Step three. Verify."),c("sysctl net.bridge.bridge-nf-call-iptables\nsysctl net.ipv4.ip_forward")]},
+{id:10,title:"Taints & Tolerations",difficulty:"Easy",scenario:[n("Taint node01 so no normal pods can schedule on it."),n("Key is PERMISSION, value is granted, effect is NoSchedule."),n("Create a pod named nginx that tolerates the taint and schedules on node01.")],concepts:[n("Taints repel pods. Tolerations allow pods onto tainted nodes."),n("Three effects: NoSchedule prevents scheduling, PreferNoSchedule is soft, NoExecute evicts existing pods."),n("The toleration must match exactly: same key, value, and effect."),n("Tolerations alone don't guarantee placement. For guaranteed placement, combine with nodeSelector.")],solution:[n("Step one. Apply the taint."),c("kubectl taint nodes node01 PERMISSION=granted:NoSchedule"),n("Step two. Create the nginx pod with toleration."),c("cat <<'EOF' | kubectl apply -f -\napiVersion: v1\nkind: Pod\nmetadata:\n  name: nginx\nspec:\n  containers:\n  - name: nginx\n    image: nginx\n  tolerations:\n  - key: PERMISSION\n    operator: Equal\n    value: granted\n    effect: NoSchedule\nEOF"),n("Step three. Verify."),c("kubectl get pods -o wide")]},
+{id:11,title:"Gateway API Migration",difficulty:"Medium",scenario:[n("An existing web application uses an Ingress resource named web."),n("Migrate this to the Kubernetes Gateway API."),n("Create a Gateway named web-gateway and an HTTPRoute named web-route."),n("Both use hostname gateway.web.k8s.local. A GatewayClass nginx-class is installed.")],concepts:[n("The Gateway API is the successor to Ingress. It separates infrastructure from routing."),n("GatewayClass defines the controller. Gateway defines listeners and TLS. HTTPRoute defines routing rules."),n("The migration pattern: Ingress TLS maps to Gateway listeners, Ingress rules map to HTTPRoute."),n("Always inspect the existing Ingress first with kubectl describe."),n("The HTTPRoute references the Gateway via parentRefs.")],solution:[n("Step one. Inspect the existing Ingress."),c("kubectl describe ingress web"),n("Step two. Create the Gateway."),c("cat <<'EOF' | kubectl apply -f -\napiVersion: gateway.networking.k8s.io/v1\nkind: Gateway\nmetadata:\n  name: web-gateway\nspec:\n  gatewayClassName: nginx-class\n  listeners:\n  - name: https\n    protocol: HTTPS\n    port: 443\n    hostname: gateway.web.k8s.local\n    tls:\n      mode: Terminate\n      certificateRefs:\n      - kind: Secret\n        name: web-tls\nEOF"),n("Step three. Create the HTTPRoute."),c("cat <<'EOF' | kubectl apply -f -\napiVersion: gateway.networking.k8s.io/v1\nkind: HTTPRoute\nmetadata:\n  name: web-route\nspec:\n  parentRefs:\n  - name: web-gateway\n  hostnames:\n  - \"gateway.web.k8s.local\"\n  rules:\n  - matches:\n    - path:\n        type: PathPrefix\n        value: /\n    backendRefs:\n    - name: web-service\n      port: 80\nEOF"),n("Step four. Verify."),c("kubectl get gateway,httproute")]},
+{id:12,title:"Ingress",difficulty:"Easy",scenario:[n("There is a deployment named echo in the echo-sound namespace."),n("Expose it with a NodePort service called echo-service on port 8080."),n("Create an Ingress resource named echo for host example.org with path /echo.")],concepts:[n("Ingress exposes HTTP routes from outside the cluster to internal services."),n("An Ingress needs a backend service. Create the service first."),n("The pathType field is required. Use Prefix for path-based routing."),n("kubectl expose is a quick way to create a service without writing YAML.")],solution:[n("Step one. Expose the deployment."),c("kubectl expose deployment echo -n echo-sound \\\n  --name echo-service --type NodePort \\\n  --port 8080 --target-port 8080"),n("Step two. Create the Ingress."),c("cat <<'EOF' | kubectl apply -f -\napiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: echo\n  namespace: echo-sound\nspec:\n  rules:\n  - host: example.org\n    http:\n      paths:\n      - path: /echo\n        pathType: Prefix\n        backend:\n          service:\n            name: echo-service\n            port:\n              number: 8080\nEOF"),n("Step three. Verify."),c("kubectl get ingress,svc -n echo-sound")]},
+{id:13,title:"Network Policy (Least-Permissive)",difficulty:"Medium",scenario:[n("Two deployments: Frontend in frontend namespace, Backend in backend namespace."),n("Three NetworkPolicy YAML files are in /root/network-policies/."),n("Determine which allows interaction in the least permissive way."),n("Deploy only the correct policy.")],concepts:[n("NetworkPolicies are firewall rules for pods. Once applied, only explicitly allowed traffic is permitted."),n("Least privilege means allow only what is needed, nothing more."),n("Compare policies carefully. Extra IP blocks or broad selectors make a policy more permissive."),n("On the exam, read each policy. Check namespace selectors, pod selectors, and IP ranges.")],solution:[n("Step one. Read all three policies."),c("cat /root/network-policies/network-policy-1.yaml\ncat /root/network-policies/network-policy-2.yaml\ncat /root/network-policies/network-policy-3.yaml"),n("Policy 1 allows all ingress. Too permissive. Policy 2 has an unnecessary IP block. Policy 3 allows only frontend namespace and pods. Most restrictive."),n("Step two. Apply the least permissive policy."),c("kubectl apply -f /root/network-policies/network-policy-3.yaml"),n("Step three. Verify."),c("kubectl get networkpolicy -n backend")]},
+{id:14,title:"StorageClass",difficulty:"Easy",scenario:[n("Create a StorageClass named local-storage with rancher.io/local-path provisioner."),n("Set VolumeBindingMode to WaitForFirstConsumer."),n("Patch it to be the default, and ensure it is the only default.")],concepts:[n("A StorageClass is a template for provisioning volumes."),n("WaitForFirstConsumer delays binding until a pod using the PVC is scheduled. This ensures correct node placement."),n("The default is set via annotation storageclass.kubernetes.io/is-default-class."),n("Only one StorageClass should be default. Remove the annotation from the old one.")],solution:[n("Step one. Create the StorageClass."),c("cat <<'EOF' | kubectl apply -f -\napiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: local-storage\nprovisioner: rancher.io/local-path\nvolumeBindingMode: WaitForFirstConsumer\nEOF"),n("Step two. Make it default."),c("kubectl patch storageclass local-storage -p \\\n  '{\"metadata\":{\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}'"),n("Step three. Remove default from old class."),c("kubectl patch storageclass local-path -p \\\n  '{\"metadata\":{\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"false\"}}}' 2>/dev/null || true"),n("Step four. Verify."),c("kubectl get sc")]},
+{id:15,title:"Etcd Fix (API Server Broken)",difficulty:"Hard",scenario:[n("After a cluster migration, the kube-apiserver is not coming up."),n("The API server was left pointing to etcd peer port 2380 instead of client port 2379."),n("Fix the configuration so the API server connects correctly.")],concepts:[n("This is the only hard question. It tests static pods and etcd configuration."),n("The kube-apiserver is a static pod. Its manifest lives at /etc/kubernetes/manifests/kube-apiserver.yaml."),n("Etcd uses two ports. 2379 is client port for the API server. 2380 is peer port for replication."),n("When you edit a static pod manifest, kubelet detects the change and restarts automatically."),n("Since the API server is down, kubectl won't work. Edit the file directly on the control plane node.")],solution:[n("Step one. Check the etcd server URL."),c("sudo grep 'etcd-servers' /etc/kubernetes/manifests/kube-apiserver.yaml"),n("You'll see port 2380. That's the peer port. It should be 2379."),n("Step two. Fix the port."),c("sudo sed -i 's/:2380/:2379/g' /etc/kubernetes/manifests/kube-apiserver.yaml"),n("Step three. Wait for kubelet to restart the API server."),c("sleep 30\nkubectl get nodes")]},
+{id:16,title:"NodePort Service",difficulty:"Easy",scenario:[n("A deployment named nodeport-deployment exists in the relative namespace."),n("Configure it to expose port 80 with name http and protocol TCP."),n("Create a NodePort Service named nodeport-service mapping port 80 to NodePort 30080.")],concepts:[n("A NodePort service exposes a service on a static port on every node."),n("Three port concepts: port is the service port, targetPort is the container port, nodePort is the external port."),n("The NodePort range is 30000-32767 by default."),n("The service selector must match the pod labels.")],solution:[n("Step one. Patch the deployment to add the container port."),c("kubectl patch deployment nodeport-deployment -n relative -p '{\n  \"spec\":{\"template\":{\"spec\":{\"containers\":[{\n    \"name\":\"nginx\",\n    \"ports\":[{\"name\":\"http\",\"containerPort\":80,\"protocol\":\"TCP\"}]\n  }]}}}}'\n"),n("Step two. Create the service."),c("cat <<'EOF' | kubectl apply -f -\napiVersion: v1\nkind: Service\nmetadata:\n  name: nodeport-service\n  namespace: relative\nspec:\n  type: NodePort\n  selector:\n    app: nodeport-deployment\n  ports:\n  - port: 80\n    targetPort: 80\n    protocol: TCP\n    nodePort: 30080\nEOF"),n("Step three. Verify."),c("kubectl get svc nodeport-service -n relative")]},
+{id:17,title:"TLS Configuration",difficulty:"Medium",scenario:[n("A deployment in nginx-static namespace has a ConfigMap supporting TLS 1.2 and 1.3."),n("Edit the ConfigMap to only allow TLS 1.3."),n("Add the service IP to /etc/hosts and verify with curl.")],concepts:[n("TLS 1.3 is the latest and most secure version."),n("In nginx, ssl_protocols controls which versions are accepted."),n("After changing a ConfigMap, restart pods with kubectl rollout restart."),n("Don't forget to add the service IP to /etc/hosts for hostname resolution.")],solution:[n("Step one. Edit the ConfigMap."),c("kubectl get configmap nginx-config -n nginx-static -o yaml | \\\n  sed 's/ssl_protocols TLSv1.2 TLSv1.3;/ssl_protocols TLSv1.3;/' | \\\n  kubectl apply -f -"),n("Step two. Add /etc/hosts entry."),c("SVC_IP=$(kubectl get svc nginx-static -n nginx-static \\\n  -o jsonpath='{.spec.clusterIP}')\necho \"$SVC_IP ckaquestion.k8s.local\" >> /etc/hosts"),n("Step three. Restart and verify."),c("kubectl rollout restart -n nginx-static deployment nginx-static\ncurl -vk --tls-max 1.2 https://ckaquestion.k8s.local  # should fail\ncurl -vk --tlsv1.3 https://ckaquestion.k8s.local     # should work")]},
 ];
 
-// ── STATE ──────────────────────────────────────────────────
+// ═══ CKS QUESTIONS ══════════════════════════════════════════
+const CKS_QUESTIONS=[
+{id:1,title:"AppArmor Profile",difficulty:"Medium",domain:"System Hardening",scenario:[n("SSH to the worker node and load the AppArmor profile at /etc/apparmor.d/nginx_apparmor."),n("Edit the Pod manifest at /home/candidate/nginx-pod.yaml to use the nginx-profile-2 profile."),n("Deploy the Pod and verify the AppArmor profile is enforced.")],concepts:[n("AppArmor is a Linux security module that restricts what a process can do: file access, network, capabilities."),n("Profiles must be loaded on the node where the pod runs, not the control plane."),n("Since Kubernetes 1.30, use securityContext.appArmorProfile instead of the old annotation method."),n("The profile type is Localhost, and localhostProfile is the profile name as shown by aa-status."),n("On the exam, always verify the profile is loaded with aa-status before applying the pod.")],solution:[n("Step one. SSH to the worker and load the profile."),c("ssh node01\napparmor_parser -q /etc/apparmor.d/nginx_apparmor\naa-status | grep nginx-profile-2\nexit"),n("Step two. Edit the pod manifest to add AppArmor securityContext."),c("# Add to spec.containers[0].securityContext:\n  securityContext:\n    appArmorProfile:\n      type: Localhost\n      localhostProfile: nginx-profile-2"),n("Step three. Apply and verify."),c("kubectl apply -f /home/candidate/nginx-pod.yaml\nkubectl exec nginx-pod -- touch /etc/test\n# Should fail: Permission denied")]},
+{id:2,title:"NetworkPolicy Deny-All",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Create a NetworkPolicy named deny-all in the testing namespace."),n("It must block all ingress and egress traffic for all pods.")],concepts:[n("A deny-all policy is the baseline for network security. Start by denying everything, then add specific allow policies."),n("podSelector empty curly braces selects ALL pods in the namespace."),n("policyTypes must explicitly list both Ingress and Egress for a full deny-all."),n("Without the Egress policyType, pods can still make outbound connections.")],solution:[n("Step one. Create the deny-all policy."),c("cat <<'EOF' | kubectl apply -f -\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-all\n  namespace: testing\nspec:\n  podSelector: {}\n  policyTypes:\n  - Ingress\n  - Egress\nEOF"),n("Step two. Verify."),c("kubectl describe netpol deny-all -n testing")]},
+{id:3,title:"ServiceAccount Token",difficulty:"Medium",domain:"Cluster Hardening",scenario:[n("Pod nginx-pod uses a default token. Disable automatic token mounting on the default ServiceAccount."),n("Create a Secret of type service-account-token referencing the default SA."),n("Edit the Pod to manually mount the token from the Secret.")],concepts:[n("By default, every pod gets a service account token auto-mounted. This is a security risk if the pod doesn't need API access."),n("Setting automountServiceAccountToken false on the SA disables auto-mounting cluster-wide for that SA."),n("You can still manually mount a token using a projected volume or a Secret of type kubernetes.io/service-account-token."),n("This gives fine-grained control over which pods get API access.")],solution:[n("Step one. Disable automount on default SA."),c("kubectl patch sa default -p '{\"automountServiceAccountToken\": false}'"),n("Step two. Create the token Secret."),c("cat <<EOF | kubectl apply -f -\napiVersion: v1\nkind: Secret\nmetadata:\n  name: default-sa-token\n  annotations:\n    kubernetes.io/service-account.name: \"default\"\ntype: kubernetes.io/service-account-token\nEOF"),n("Step three. Recreate pod with manual volume mount."),c("kubectl delete pod nginx-pod\nkubectl apply -f - <<'EOF'\napiVersion: v1\nkind: Pod\nmetadata:\n  name: nginx-pod\nspec:\n  serviceAccountName: default\n  automountServiceAccountToken: false\n  containers:\n  - name: nginx\n    image: nginx\n    volumeMounts:\n    - name: token-vol\n      mountPath: /var/run/secrets/kubernetes.io/serviceaccount/\n      readOnly: true\n  volumes:\n  - name: token-vol\n    secret:\n      secretName: default-sa-token\nEOF")]},
+{id:4,title:"Secure API Server",difficulty:"Medium",domain:"Cluster Hardening",scenario:[n("The API server was configured to allow unauthenticated and unauthorized access."),n("Re-secure it: use Node,RBAC authorization, NodeRestriction admission, disable anonymous auth."),n("Remove the ClusterRoleBinding granting access to system:anonymous.")],concepts:[n("AlwaysAllow authorization mode lets any request through. Never use it in production."),n("Node authorization restricts kubelets to only read objects related to their own node."),n("NodeRestriction admission prevents kubelets from modifying objects outside their scope."),n("anonymous-auth false ensures no unauthenticated requests are processed."),n("After editing the static pod manifest, wait about 30 seconds for kubelet to restart the API server.")],solution:[n("Step one. Edit the API server manifest."),c("# In /etc/kubernetes/manifests/kube-apiserver.yaml:\n- --authorization-mode=Node,RBAC\n- --enable-admission-plugins=NodeRestriction\n- --anonymous-auth=false"),n("Step two. Remove the anonymous ClusterRoleBinding."),c("kubectl delete clusterrolebinding system:anonymous"),n("Step three. Wait and verify."),c("kubectl get pods -n kube-system")]},
+{id:5,title:"Audit Logging",difficulty:"Medium",domain:"Runtime Security",scenario:[n("Enable Kubernetes audit logging at /var/log/kubernetes-logs.log."),n("Retain 5 days, max 10 files, 100 MB per file."),n("Create policy rules for CronJobs at RequestResponse, deployments in kube-system at Request, core and extensions at Request."),n("Exclude watch requests by system:kube-proxy on endpoints or services.")],concepts:[n("Audit logging records who did what, when, and to which resources. Essential for security forensics."),n("Four audit levels from least to most verbose: None, Metadata, Request, RequestResponse."),n("Rules are evaluated in order. First match wins. Put specific rules before catch-all rules."),n("You need volume mounts for both the policy file and the log directory in the API server manifest."),n("If the API server fails to start after changes, check for missing volumes or YAML indentation errors.")],solution:[n("Step one. Write the audit policy."),c("# /etc/audit/audit-policy.yaml\napiVersion: audit.k8s.io/v1\nkind: Policy\nrules:\n  - level: RequestResponse\n    resources:\n      - group: \"batch\"\n        resources: [\"cronjobs\"]\n  - level: Request\n    namespaces: [\"kube-system\"]\n    resources:\n      - group: \"apps\"\n        resources: [\"deployments\"]\n  - level: None\n    users: [\"system:kube-proxy\"]\n    verbs: [\"watch\"]\n    resources:\n      - group: \"\"\n        resources: [\"endpoints\", \"services\"]\n  - level: Request\n    resources:\n      - group: \"\"\n      - group: \"extensions\""),n("Step two. Add flags and volumes to the API server manifest."),c("# Add to kube-apiserver.yaml:\n- --audit-policy-file=/etc/audit/audit-policy.yaml\n- --audit-log-path=/var/log/kubernetes-logs.log\n- --audit-log-maxage=5\n- --audit-log-maxbackup=10\n- --audit-log-maxsize=100\n# Plus volumeMounts and volumes for the policy file and log dir")]},
+{id:6,title:"Dockerfile & Pod Fixes",difficulty:"Easy",domain:"System Hardening",scenario:[n("A Dockerfile and Pod manifest both contain security violations."),n("Fix two issues in each. Do not add or remove fields, only edit existing ones."),n("Use test-user with UID 5375 when a non-root user is needed.")],concepts:[n("FROM latest is mutable and breaks reproducibility. Always pin to a specific version."),n("USER ROOT runs as root inside the container. Any escape gives root on the host."),n("runAsUser 0 is the numeric root. privileged true gives nearly all host capabilities."),n("These Dockerfile plus manifest combo questions appear frequently on the CKS exam.")],solution:[n("Dockerfile fixes."),c("FROM ubuntu:latest  ->  FROM ubuntu:20.04\nUSER ROOT           ->  USER test-user"),n("Pod manifest fixes."),c("runAsUser: 0        ->  runAsUser: 5375\nprivileged: true    ->  privileged: false")]},
+{id:7,title:"kube-bench Fixes",difficulty:"Medium",domain:"Cluster Setup",scenario:[n("Run kube-bench and fix security violations in the API server, kubelet, and etcd."),n("API server needs kubelet-certificate-authority and profiling disabled."),n("Kubelet needs anonymous auth disabled and Webhook authorization."),n("Etcd must not have auto-tls or peer-auto-tls enabled.")],concepts:[n("kube-bench checks your cluster against CIS Kubernetes Benchmark standards."),n("kubelet-certificate-authority tells the API server to verify kubelet certificates. Without it, the API server connects unverified."),n("Profiling exposes performance data at /debug/pprof. Disable in production."),n("auto-tls generates self-signed certs, bypassing proper PKI. Always disable."),n("After kubelet config changes, restart with systemctl daemon-reload and restart kubelet.")],solution:[n("Step one. Fix API server."),c("# /etc/kubernetes/manifests/kube-apiserver.yaml\n- --kubelet-certificate-authority=/etc/kubernetes/pki/ca.crt\n- --profiling=false"),n("Step two. Fix kubelet."),c("# /var/lib/kubelet/config.yaml\nauthentication:\n  anonymous:\n    enabled: false\nauthorization:\n  mode: Webhook\n# Then:\nsudo systemctl daemon-reload\nsudo systemctl restart kubelet"),n("Step three. Fix etcd."),c("# /etc/kubernetes/manifests/etcd.yaml\n# Remove: --auto-tls=true\n# Remove: --peer-auto-tls=true")]},
+{id:8,title:"Encryption at Rest",difficulty:"Medium",domain:"Microservice Vulns",scenario:[n("Enable encryption at rest for Secrets using AES-CBC and identity providers."),n("Create an EncryptionConfiguration manifest."),n("Configure the API server to use it and re-encrypt existing secrets.")],concepts:[n("By default, Kubernetes stores Secrets in etcd as base64, which is not encryption."),n("AES-CBC is the recommended provider. The first provider in the list is used for encryption."),n("Identity as a fallback allows reading unencrypted secrets during migration."),n("After enabling encryption, existing secrets remain unencrypted until you re-encrypt them with kubectl get secrets and kubectl replace.")],solution:[n("Step one. Generate key and create EncryptionConfiguration."),c("head -c 32 /dev/urandom | base64\n# Create /etc/kubernetes/enc/enc.yaml:\napiVersion: apiserver.config.k8s.io/v1\nkind: EncryptionConfiguration\nresources:\n  - resources:\n      - secrets\n    providers:\n      - aescbc:\n          keys:\n            - name: key1\n              secret: <base64-key>\n      - identity: {}"),n("Step two. Add flag and volume to API server."),c("- --encryption-provider-config=/etc/kubernetes/enc/enc.yaml\n# Add volume mount for /etc/kubernetes/enc"),n("Step three. Re-encrypt all existing secrets."),c("kubectl get secrets --all-namespaces -o json | kubectl replace -f -")]},
+{id:9,title:"Stateless & Immutable Pods",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("In the prod namespace, identify and delete pods that are stateful or not immutable."),n("Stateful means using hostPath or PVC volumes. Not immutable means privileged or writable root filesystem."),n("Only compliant pods should remain.")],concepts:[n("Stateless means no persistent data in hostPath or PVC. emptyDir is considered stateless."),n("Immutable means readOnlyRootFilesystem true and privileged false."),n("Inspect each pod's volumes and securityContext to determine compliance."),n("This is a quick question on the exam. Check yaml, delete violators, move on.")],solution:[n("Step one. Inspect pods."),c("kubectl get pods -n prod -o yaml | grep -E 'privileged|readOnlyRootFilesystem|hostPath'"),n("Step two. Delete non-compliant pods."),c("kubectl delete --force --grace-period=0 pod app -n prod\nkubectl delete --force --grace-period=0 pod gcc -n prod")]},
+{id:10,title:"RuntimeClass gVisor",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Create a RuntimeClass named sandboxed using the runsc handler."),n("Update all Pods in the server namespace to use this runtime.")],concepts:[n("gVisor provides a user-space kernel that intercepts syscalls, sandboxing the container from the host."),n("RuntimeClass links a name to a container runtime handler configured in containerd."),n("runtimeClassName goes in the pod template spec, same level as containers."),n("Trade-off: stronger isolation but some performance overhead and syscall compatibility limits.")],solution:[n("Step one. Create the RuntimeClass."),c("cat <<EOF | kubectl create -f -\napiVersion: node.k8s.io/v1\nkind: RuntimeClass\nmetadata:\n  name: sandboxed\nhandler: runsc\nEOF"),n("Step two. Patch all deployments."),c("for d in workload1 workload2 workload3; do\n  kubectl patch deploy \"$d\" -n server --type=merge \\\n    -p '{\"spec\":{\"template\":{\"spec\":{\"runtimeClassName\":\"sandboxed\"}}}}'\ndone")]},
+{id:11,title:"ImagePolicyWebhook",difficulty:"Medium",domain:"Supply Chain",scenario:[n("The cluster has an incomplete image scanner webhook config at /etc/kubernetes/confcontrol/."),n("Enable ImagePolicyWebhook admission, set defaultAllow to false for implicit deny."),n("Test by deploying a pod with the latest tag.")],concepts:[n("ImagePolicyWebhook validates container images before pod creation via an external webhook."),n("defaultAllow false means deny if the webhook is unreachable. This is the secure default."),n("defaultAllow true is insecure because images pass if the webhook is down."),n("You need to add the admission plugin and the config file flag to the API server manifest.")],solution:[n("Step one. Fix the admission config."),c("# Change defaultAllow: true to defaultAllow: false\n# In /etc/kubernetes/confcontrol/admission_configuration.yaml"),n("Step two. Edit the API server manifest."),c("- --enable-admission-plugins=NodeRestriction,ImagePolicyWebhook\n- --admission-control-config-file=/etc/kubernetes/confcontrol/admission_configuration.yaml\n# Add volume mount for /etc/kubernetes/confcontrol")]},
+{id:12,title:"Remove docker.sock Mount",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("A Pod in dev-ops namespace mounts /var/run/docker.sock from the host."),n("This gives privileged access to the Docker daemon."),n("Remove the volume mount from the Deployment.")],concepts:[n("docker.sock gives full Docker daemon access. A container can create sibling containers or escape entirely."),n("This is one of the most common container breakout vectors."),n("Remove BOTH the volumeMount AND the volume definition from the Deployment."),n("After editing, old pods are replaced automatically by the Deployment controller.")],solution:[n("Step one. Find and edit the deployment."),c("kubectl get pods -n dev-ops -o yaml | grep -A 3 docker.sock\nkubectl edit deploy docker-hacker -n dev-ops\n# Remove volumeMount and volume for docker.sock"),n("Step two. Verify."),c("kubectl exec -it <pod> -n dev-ops -- ls /var/run/docker.sock\n# Should say: No such file or directory")]},
+{id:13,title:"Istio mTLS",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Label the payments namespace for Istio sidecar injection."),n("Create a PeerAuthentication named payments-mtls-strict enforcing STRICT mTLS.")],concepts:[n("Istio mTLS encrypts all pod-to-pod traffic using mutual TLS via Envoy sidecars."),n("STRICT mode rejects any unencrypted traffic. PERMISSIVE allows both."),n("The istio-injection=enabled label triggers automatic sidecar injection."),n("Existing pods need a restart to get the sidecar injected.")],solution:[n("Step one. Label the namespace."),c("kubectl label namespace payments istio-injection=enabled --overwrite"),n("Step two. Create PeerAuthentication."),c("cat <<EOF | kubectl apply -f -\napiVersion: security.istio.io/v1\nkind: PeerAuthentication\nmetadata:\n  name: payments-mtls-strict\n  namespace: payments\nspec:\n  mtls:\n    mode: STRICT\nEOF"),n("Step three. Restart pods for sidecar injection."),c("kubectl rollout restart deployment -n payments")]},
+{id:14,title:"Pod Security Admission",difficulty:"Medium",domain:"Microservice Vulns",scenario:[n("Namespace secure-team enforces the restricted Pod Security Standard."),n("A Deployment fails because it violates the restricted profile."),n("Fix the manifest to comply: remove privileged, set non-root, drop capabilities, remove hostPath.")],concepts:[n("Pod Security Admission replaced PodSecurityPolicy in Kubernetes 1.25."),n("Three profiles: privileged (unrestricted), baseline (sensible defaults), restricted (hardened)."),n("The restricted profile requires: runAsNonRoot, drop ALL capabilities, no hostPath, no privileged, readOnlyRootFilesystem."),n("Three modes: enforce (reject), audit (log), warn (warning message).")],solution:[n("Fix the deployment manifest."),c("# Remove or change:\nprivileged: true        -> remove\nrunAsUser: 0            -> runAsUser: 65535\ncapabilities.add: NET_ADMIN -> capabilities.drop: [\"ALL\"]\nhostPath volume         -> emptyDir: {}\n# Add:\nrunAsNonRoot: true\nallowPrivilegeEscalation: false\nreadOnlyRootFilesystem: true"),n("Apply the fixed manifest."),c("kubectl apply -f /home/masters/insecure-deployment.yaml")]},
+{id:15,title:"Worker Node Upgrade",difficulty:"Easy",domain:"Cluster Hardening",scenario:[n("The worker node is running an older Kubernetes version."),n("Document the upgrade procedure to /home/candidate/upgrade-procedure.txt."),n("Include drain, kubeadm upgrade, kubelet upgrade, and uncordon steps.")],concepts:[n("Always drain before upgrading to safely evict pods."),n("Order: drain, upgrade kubeadm, kubeadm upgrade node, upgrade kubelet and kubectl, restart kubelet, uncordon."),n("kubeadm must be upgraded BEFORE running kubeadm upgrade node."),n("The kubelet version must not exceed the API server version."),n("apt-mark hold prevents accidental package upgrades.")],solution:[n("The complete upgrade procedure."),c("kubectl drain node01 --ignore-daemonsets\nssh node01\nsudo apt-mark unhold kubeadm\nsudo apt-get update && sudo apt-get install -y kubeadm='1.33.0-*'\nsudo apt-mark hold kubeadm\nsudo kubeadm upgrade node\nsudo apt-mark unhold kubelet kubectl\nsudo apt-get install -y kubelet='1.33.0-*' kubectl='1.33.0-*'\nsudo apt-mark hold kubelet kubectl\nsudo systemctl daemon-reload\nsudo systemctl restart kubelet\nexit\nkubectl uncordon node01")]},
+{id:16,title:"Falco: Detect /dev/mem",difficulty:"Medium",domain:"Runtime Security",scenario:[n("Complete a Falco rule to detect any container reading or writing to /dev/mem."),n("Include required output fields: proc.name, proc.cmdline, container.id, image, pod name, namespace."),n("Identify and scale the responsible deployment to zero.")],concepts:[n("Falco monitors system calls in real-time to detect suspicious container behavior."),n("evt.is_open_read and evt.is_open_write match open syscalls with read or write flags."),n("fd.name contains /dev/mem matches any file path containing /dev/mem."),n("Common mistake: using evt.type=read instead of evt.is_open_read. They match different syscalls."),n("Falco rules use Sysdig filter syntax, not regex.")],solution:[n("Step one. Complete the Falco rule."),c("- rule: detect dev mem access\n  desc: Detect read/write to /dev/mem\n  condition: >\n    ((evt.is_open_read=true or evt.is_open_write=true)\n    and fd.name contains /dev/mem)\n  output: >\n    Process %proc.name accessed /dev/mem\n    (command=%proc.cmdline container=%container.id\n    image=%container.image.repository\n    pod_name=%k8s.pod.name namespace=%k8s.ns.name)\n  priority: WARNING"),n("Step two. Scale the offending deployment to zero."),c("kubectl scale deployment mem-hacker --replicas=0")]},
+{id:17,title:"Audit Logging Extended",difficulty:"Medium",domain:"Runtime Security",scenario:[n("Configure audit logging with 12-day retention, max 8 files, 200MB rotation."),n("Log namespace changes at RequestResponse, secrets in kube-system at Request."),n("Log core and extensions at Request, pods/portforward and services/proxy at Metadata."),n("Omit RequestReceived stage. Default all others at Metadata.")],concepts:[n("omitStages lets you skip logging at certain stages to reduce noise."),n("The catch-all rule at the bottom with just a level and no resources matches everything not caught above."),n("Subresources like pods/portforward use a slash syntax in the resources list."),n("Volume mounts for the policy file and log directory are required in the API server manifest.")],solution:[n("Step one. Write the audit policy."),c("apiVersion: audit.k8s.io/v1\nkind: Policy\nomitStages: [\"RequestReceived\"]\nrules:\n  - level: RequestResponse\n    resources: [{group: \"\", resources: [\"namespaces\"]}]\n  - level: Request\n    namespaces: [\"kube-system\"]\n    resources: [{group: \"\", resources: [\"secrets\"]}]\n  - level: Request\n    resources: [{group: \"\"}, {group: \"extensions\"}]\n  - level: Metadata\n    resources: [{group: \"\", resources: [\"pods/portforward\",\"services/proxy\"]}]\n  - level: Metadata"),n("Step two. Add API server flags."),c("- --audit-log-path=/var/log/kubernetes-logs.log\n- --audit-log-maxage=12\n- --audit-log-maxbackup=8\n- --audit-log-maxsize=200")]},
+{id:18,title:"Trivy Scanning",difficulty:"Easy",domain:"Supply Chain",scenario:[n("Scan 5 images for HIGH and CRITICAL vulnerabilities using trivy."),n("Store all results in /opt/trivy-vulnerable.txt.")],concepts:[n("Trivy is a comprehensive vulnerability scanner for container images."),n("The severity flag filters to only HIGH and CRITICAL CVEs."),n("Use --output for the first scan and append with >> for subsequent scans."),n("On the exam, trivy is pre-installed. Just know the command syntax.")],solution:[n("Scan all five images."),c("trivy image --severity HIGH,CRITICAL --output /opt/trivy-vulnerable.txt ubuntu:18.04\ntrivy image --severity HIGH,CRITICAL >> /opt/trivy-vulnerable.txt registry.k8s.io/kube-apiserver:v1.24.0\ntrivy image --severity HIGH,CRITICAL >> /opt/trivy-vulnerable.txt registry.k8s.io/kube-scheduler:v1.23.0\ntrivy image --severity HIGH,CRITICAL >> /opt/trivy-vulnerable.txt postgres:12\ntrivy image --severity HIGH,CRITICAL >> /opt/trivy-vulnerable.txt httpd:2.4.49")]},
+{id:19,title:"Falco Process Monitor",difficulty:"Medium",domain:"Runtime Security",scenario:[n("Write a Falco rule to detect new process execution in containers."),n("Configure Falco to write alerts to /opt/falco-alerts/details."),n("Restart the Falco service.")],concepts:[n("evt.type in open,openat,creat with evt.is_open_exec=true detects files opened for execution."),n("The container keyword filters for container events only, not host events."),n("Falco's file_output sends alert text to a file instead of stdout or syslog."),n("Priority ERROR makes these alerts high-visibility in the output.")],solution:[n("Step one. Write the Falco rule."),c("- rule: Container Drift Detected\n  desc: New executable in a container\n  condition: >\n    evt.type in (open,openat,creat) and evt.is_open_exec=true\n    and container and evt.rawres>=0\n  output: \"%evt.time,%user.uid,%proc.name\"\n  priority: ERROR"),n("Step two. Configure file output in /etc/falco/falco.yaml."),c("file_output:\n  enabled: true\n  keep_alive: false\n  filename: /opt/falco-alerts/details"),n("Step three. Restart Falco."),c("systemctl restart falco.service")]},
+{id:20,title:"Restricted NetworkPolicy",difficulty:"Medium",domain:"Microservice Vulns",scenario:[n("Create restricted-policy in dev-team namespace for pods with label environment=dev."),n("Allow ingress from any pod in the same namespace."),n("Allow ingress from pods labeled environment=testing from any namespace.")],concepts:[n("Two separate from entries means OR logic. Either rule allows traffic."),n("Within a single from entry, namespaceSelector plus podSelector means AND logic."),n("podSelector empty with no namespaceSelector means same namespace only."),n("namespaceSelector empty means all namespaces.")],solution:[n("Create the NetworkPolicy."),c("apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: restricted-policy\n  namespace: dev-team\nspec:\n  podSelector:\n    matchLabels:\n      environment: dev\n  policyTypes: [Ingress]\n  ingress:\n    - from:\n        - podSelector: {}\n    - from:\n        - namespaceSelector: {}\n          podSelector:\n            matchLabels:\n              environment: testing")]},
+{id:21,title:"KubeSec Scanning",difficulty:"Easy",domain:"Supply Chain",scenario:[n("Scan a pod manifest with KubeSec and harden it to score at least 4."),n("Add runAsUser, runAsNonRoot, allowPrivilegeEscalation false, readOnlyRootFilesystem, drop ALL capabilities.")],concepts:[n("KubeSec statically analyzes Kubernetes manifests and assigns a security score."),n("Each security fix adds points. Five fixes gets you to 5 points total."),n("This is a quick-win question on the exam. Know the five standard security fields.")],solution:[n("Apply all five security fixes."),c("securityContext:\n  runAsUser: 1000\n  runAsNonRoot: true\n  allowPrivilegeEscalation: false\n  readOnlyRootFilesystem: true\n  capabilities:\n    drop: [\"ALL\"]"),n("Re-scan to verify."),c("docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < /home/candidate/kubesec-test.yaml")]},
+{id:22,title:"RuntimeClass Untrusted",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Create RuntimeClass untrusted with handler runsc."),n("Create a Pod named untrusted using alpine 3.18, scheduled on the worker node with gVisor."),n("Capture dmesg output to /opt/course/untrusted-test-dmesg.")],concepts:[n("This is similar to the sandboxed RuntimeClass question but with a specific pod to create."),n("nodeName schedules the pod on a specific node. runtimeClassName selects the runtime."),n("With gVisor, dmesg shows the gVisor kernel instead of the host kernel, proving isolation.")],solution:[n("Create the RuntimeClass and Pod."),c("apiVersion: node.k8s.io/v1\nkind: RuntimeClass\nmetadata:\n  name: untrusted\nhandler: runsc\n---\napiVersion: v1\nkind: Pod\nmetadata:\n  name: untrusted\nspec:\n  nodeName: node01\n  runtimeClassName: untrusted\n  containers:\n  - name: untrusted\n    image: alpine:3.18\n    command: [\"/bin/sh\", \"-c\", \"sleep 3600\"]"),n("Capture dmesg."),c("kubectl exec untrusted -- dmesg > /opt/course/untrusted-test-dmesg")]},
+{id:23,title:"PSP Privileged (Manifest)",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Write a PodSecurityPolicy manifest preventing privileged containers."),n("Include ClusterRole, ServiceAccount, and ClusterRoleBinding."),n("This is a manifest-writing exercise since PSP was removed in K8s 1.25.")],concepts:[n("PSP was removed but CKS may still test knowledge of the concepts."),n("The attributes map directly to securityContext fields and Pod Security Standards."),n("The ClusterRole needs the special use verb on podsecuritypolicies."),n("Modern equivalent is Pod Security Admission with the restricted profile.")],solution:[n("Write all resources to the solution file."),c("# PodSecurityPolicy\nspec:\n  privileged: false\n  allowPrivilegeEscalation: false\n  requiredDropCapabilities: [\"ALL\"]\n  volumes: [configMap, emptyDir, projected, secret, downwardAPI, persistentVolumeClaim]\n  runAsUser: {rule: MustRunAsNonRoot}\n  readOnlyRootFilesystem: true\n\n# ClusterRole: restrict-access-role (verb: use on PSP)\n# ServiceAccount: psp-restrict-sa in staging\n# ClusterRoleBinding: restrict-access-bind")]},
+{id:24,title:"User CSR and RBAC",difficulty:"Medium",domain:"Cluster Hardening",scenario:[n("Create a CertificateSigningRequest for user john, approve it."),n("Create Role john-role allowing list, get, create, delete on pods and secrets."),n("Create RoleBinding john-role-binding in namespace john.")],concepts:[n("CSRs are how users get certificates signed by the cluster CA."),n("The signerName kubernetes.io/kube-apiserver-client is for client authentication."),n("The CSR request field must be base64-encoded."),n("kubectl auth can-i is essential for verifying RBAC permissions on the exam.")],solution:[n("Step one. Create and approve the CSR."),c("CSR_B64=$(cat /home/candidate/john.csr | base64 | tr -d '\\n')\ncat <<EOF | kubectl apply -f -\napiVersion: certificates.k8s.io/v1\nkind: CertificateSigningRequest\nmetadata:\n  name: john-csr\nspec:\n  request: $CSR_B64\n  signerName: kubernetes.io/kube-apiserver-client\n  usages: [client auth]\nEOF\nkubectl certificate approve john-csr"),n("Step two. Create Role and RoleBinding."),c("kubectl create role john-role --verb=list,get,create,delete --resource=pods,secrets -n john\nkubectl create rolebinding john-role-binding --role=john-role --user=john -n john")]},
+{id:25,title:"TLS Ingress",difficulty:"Easy",domain:"Cluster Setup",scenario:[n("Create a TLS Secret from certificate and key files."),n("Deploy nginx and expose it with a Service."),n("Create an Ingress with TLS for host bingo.com with HTTP-to-HTTPS redirect.")],concepts:[n("TLS Secrets store the certificate and private key for HTTPS termination."),n("The Ingress tls section references the Secret and the hostname."),n("The nginx annotation force-ssl-redirect redirects HTTP to HTTPS."),n("kubectl run with --expose creates both the pod and service in one command.")],solution:[n("Create the TLS Secret, pod, service, and Ingress."),c("kubectl create secret tls bingo-tls --cert=/home/candidate/bingo.crt --key=/home/candidate/bingo.key -n testing\nkubectl run nginx-pod -n testing --image=nginx --expose=true --port=80"),c("apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: bingo-com\n  namespace: testing\n  annotations:\n    nginx.ingress.kubernetes.io/force-ssl-redirect: \"true\"\nspec:\n  rules:\n  - host: bingo.com\n    http:\n      paths:\n      - path: /\n        pathType: Prefix\n        backend:\n          service: {name: nginx-pod, port: {number: 80}}\n  tls:\n  - hosts: [bingo.com]\n    secretName: bingo-tls")]},
+{id:26,title:"CIS Benchmark Fixes",difficulty:"Easy",domain:"Cluster Setup",scenario:[n("Fix CIS benchmark violations in API server, kubelet, and etcd."),n("API server needs Node,RBAC authorization mode."),n("Kubelet needs anonymous auth disabled and Webhook authorization."),n("Etcd needs client-cert-auth enabled and auto-tls removed.")],concepts:[n("CIS benchmarks are industry-standard security configurations."),n("Node authorization restricts kubelets to only read objects related to their node."),n("client-cert-auth in etcd requires client certificates for all connections."),n("This is very similar to kube-bench fixes. Know the three config files and the key flags.")],solution:[n("Fix all three components."),c("# API Server: --authorization-mode=Node,RBAC\n# Kubelet: anonymous.enabled: false, mode: Webhook\n# Etcd: --client-cert-auth=true, remove --auto-tls=true\nsudo systemctl daemon-reload && sudo systemctl restart kubelet")]},
+{id:27,title:"Secrets Management",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Decode an existing secret and save values to files."),n("Create a new secret with specific credentials."),n("Mount it as a volume in a redis pod.")],concepts:[n("Secrets are base64 encoded, not encrypted. Use jsonpath to extract and base64 -d to decode."),n("kubectl create secret generic with --from-literal is the fastest way."),n("Mount secrets as volumes at a specific path with readOnly true for security.")],solution:[n("Step one. Decode and save."),c("kubectl get secret admin -n safe -o jsonpath='{.data.username}' | base64 -d > /home/cert-masters/username.txt\nkubectl get secret admin -n safe -o jsonpath='{.data.password}' | base64 -d > /home/cert-masters/password.txt"),n("Step two. Create new secret."),c("kubectl create secret generic newsecret --from-literal=username=dbadmin --from-literal=password=moresecurepas -n safe"),n("Step three. Create pod with volume mount."),c("apiVersion: v1\nkind: Pod\nmetadata: {name: mysecret-pod, namespace: safe}\nspec:\n  containers:\n  - name: db-container\n    image: redis\n    volumeMounts:\n    - {name: secret-vol, mountPath: /etc/mysecret, readOnly: true}\n  volumes:\n  - name: secret-vol\n    secret: {secretName: newsecret}")]},
+{id:28,title:"Kill Process on Port 389",difficulty:"Easy",domain:"System Hardening",scenario:[n("Find the suspicious process listening on port 389."),n("List its file descriptors, find the binary path, kill it, and delete the binary.")],concepts:[n("ss -tulpn shows listening TCP and UDP ports with process info."),n("/proc/PID/fd lists all open file descriptors. /proc/PID/exe is a symlink to the binary."),n("Port 389 is LDAP. An unauthorized LDAP service is a security concern."),n("This is a quick Linux skills question. Know your /proc filesystem.")],solution:[n("Find, document, kill, and delete."),c("ss -tulpn | grep :389\n# Note the PID\nls -l /proc/<PID>/fd > /candidate/13/files.txt\nreadlink -f /proc/<PID>/exe\nkill -9 <PID>\nrm -f /usr/local/bin/fake-ldap")]},
+{id:29,title:"Role Modification",difficulty:"Easy",domain:"Cluster Hardening",scenario:[n("Modify Role role-1 to only allow watch on services."),n("Create ClusterRole role-2 allowing update on namespaces."),n("Bind role-2 to ServiceAccount sa-dev-1.")],concepts:[n("Principle of least privilege: roles should grant minimum needed access."),n("Use kubectl get rolebindings -o wide to trace SA to Role mappings."),n("A ServiceAccount can have multiple RoleBindings granting different permissions.")],solution:[n("Step one. Edit the role."),c("kubectl edit role role-1 -n security\n# Change rules to:\nrules:\n- apiGroups: [\"\"]\n  resources: [\"services\"]\n  verbs: [\"watch\"]"),n("Step two. Create ClusterRole and binding."),c("kubectl create clusterrole role-2 --verb=update --resource=namespaces\nkubectl create clusterrolebinding role-2-binding --clusterrole=role-2 --serviceaccount=security:sa-dev-1")]},
+{id:30,title:"Projected SA Token",difficulty:"Medium",domain:"Cluster Hardening",scenario:[n("Disable automount on the default ServiceAccount."),n("Recreate Pod token-demo with a projected serviceAccountToken volume."),n("Configure 600 second expiration and a specific audience.")],concepts:[n("Projected volumes combine multiple sources into one mount."),n("serviceAccountToken source creates a bound, time-limited token that kubelet rotates."),n("expirationSeconds controls token lifetime. audience sets the intended recipient."),n("This is more secure than the default auto-mounted long-lived token.")],solution:[n("Disable automount and create pod."),c("kubectl patch sa default -p '{\"automountServiceAccountToken\": false}'\nkubectl delete pod token-demo --force --grace-period=0"),c("apiVersion: v1\nkind: Pod\nmetadata: {name: token-demo}\nspec:\n  serviceAccountName: default\n  containers:\n  - name: nginx\n    image: nginx\n    volumeMounts:\n    - {name: token-vol, mountPath: /var/run/secrets/tokens, readOnly: true}\n  volumes:\n  - name: token-vol\n    projected:\n      sources:\n      - serviceAccountToken:\n          path: token.jwt\n          expirationSeconds: 600\n          audience: https://kubernetes.default.svc.cluster.local")]},
+{id:31,title:"ImagePolicyWebhook (valhalla)",difficulty:"Medium",domain:"Supply Chain",scenario:[n("Fix the admission config: change defaultAllow from true to false."),n("Enable ImagePolicyWebhook in the API server with the config file."),n("Add volume mount for the config directory.")],concepts:[n("This is the same concept as Q11 but with a different config directory."),n("defaultAllow false is the secure choice. Deny by default, allow only verified images."),n("The webhook endpoint normally runs an image scanner that accepts or rejects images."),n("On KillerCoda there's no backend, so pods will fail. The spec correctness is what's tested.")],solution:[n("Fix config and update API server."),c("# /etc/kubernetes/imgconfig/admission_configuration.yaml:\n# Change: defaultAllow: true -> defaultAllow: false\n\n# kube-apiserver.yaml:\n- --enable-admission-plugins=NodeRestriction,ImagePolicyWebhook\n- --admission-control-config-file=/etc/kubernetes/imgconfig/admission_configuration.yaml\n# Add volume for /etc/kubernetes/imgconfig")]},
+{id:32,title:"CiliumNetworkPolicy mTLS",difficulty:"Medium",domain:"Microservice Vulns",scenario:[n("Create CiliumNetworkPolicy team-dev denying outgoing ICMP from role=stuff to role=backend."),n("Create team-dev-2 allowing ingress to role=database from role=api-service with mutual auth required.")],concepts:[n("CiliumNetworkPolicy extends standard NetworkPolicy with Layer 7 and ICMP support."),n("egressDeny with icmps explicitly blocks ping traffic. ICMP type 8 is Echo Request."),n("authentication mode required enforces mutual TLS between endpoints using SPIFFE identities."),n("Cilium mutual authentication provides identity-based security beyond just network rules.")],solution:[n("Create both policies."),c("# Policy 1: Deny ICMP from stuff to backend\napiVersion: cilium.io/v2\nkind: CiliumNetworkPolicy\nmetadata: {name: team-dev, namespace: team-dev}\nspec:\n  endpointSelector: {matchLabels: {role: stuff}}\n  egressDeny:\n    - icmps:\n        - fields: [{type: 8, family: IPv4}]\n      toEndpoints:\n        - matchLabels: {role: backend}"),c("# Policy 2: mTLS ingress\napiVersion: cilium.io/v2\nkind: CiliumNetworkPolicy\nmetadata: {name: team-dev-2, namespace: team-dev}\nspec:\n  endpointSelector: {matchLabels: {role: database}}\n  ingress:\n    - fromEndpoints:\n        - matchLabels: {role: api-service}\n      authentication: {mode: \"required\"}")]},
+{id:33,title:"Seccomp Profile",difficulty:"Easy",domain:"System Hardening",scenario:[n("Create a custom Seccomp profile allowing only read, write, exit, sigreturn syscalls."),n("Update Deployment webapp to use this Localhost profile.")],concepts:[n("Seccomp restricts which system calls a container can make."),n("SCMP_ACT_ERRNO as defaultAction blocks all syscalls not explicitly allowed."),n("Profiles go under /var/lib/kubelet/seccomp/ and localhostProfile is relative to that path."),n("Only allowing essential syscalls dramatically reduces attack surface.")],solution:[n("Create the profile."),c("cat > /var/lib/kubelet/seccomp/profiles/seccomp-profile.json << 'EOF'\n{\"defaultAction\":\"SCMP_ACT_ERRNO\",\n \"syscalls\":[{\"names\":[\"read\",\"write\",\"exit\",\"sigreturn\"],\"action\":\"SCMP_ACT_ALLOW\"}]}\nEOF"),n("Update the deployment."),c("# Add to pod spec:\nsecurityContext:\n  seccompProfile:\n    type: Localhost\n    localhostProfile: profiles/seccomp-profile.json")]},
+{id:34,title:"Docker Socket Permissions",difficulty:"Medium",domain:"Microservice Vulns",scenario:[n("Find the pod mounting docker.sock in ci-cd namespace."),n("Restrict socket permissions and harden the pod's securityContext."),n("runAsUser 65535, drop ALL, readOnlyRootFilesystem, no privilege escalation.")],concepts:[n("Defense in depth: socket permissions plus securityContext together limit blast radius."),n("Pods are immutable for securityContext. You must delete and recreate."),n("runAsUser 65535 is the nobody user with minimal privileges."),n("Prefer Kaniko or Buildah over Docker-in-Docker in production.")],solution:[n("Restrict permissions and recreate pod."),c("kubectl exec -n ci-cd docker-builder -- chown 65535:65535 /var/run/docker.sock\nkubectl exec -n ci-cd docker-builder -- chmod 0600 /var/run/docker.sock"),n("Delete and recreate with hardened securityContext."),c("# securityContext:\n#   runAsUser: 65535\n#   runAsGroup: 65535\n#   readOnlyRootFilesystem: true\n#   allowPrivilegeEscalation: false\n#   capabilities: {drop: [ALL]}")]},
+{id:35,title:"Trivy: Delete Vulnerable",difficulty:"Easy",domain:"Supply Chain",scenario:[n("In namespace nato, scan all pod images with trivy for HIGH/CRITICAL vulnerabilities."),n("Delete pods running vulnerable images. Only safe images should remain.")],concepts:[n("Older images accumulate CVEs over time. Scanning identifies which are vulnerable."),n("Use --severity HIGH,CRITICAL to filter for serious issues only."),n("Force delete with --grace-period=0 is acceptable in exam scenarios."),n("In production, you'd update images rather than just delete pods.")],solution:[n("Scan and delete."),c("kubectl get pods -n nato -o jsonpath='{range .items[*]}{.metadata.name}{\"\\t\"}{.spec.containers[0].image}{\"\\n\"}{end}'\ntrivy image --severity HIGH,CRITICAL nginx:1.25   # safe\ntrivy image --severity HIGH,CRITICAL nginx:1.19   # vulnerable\ntrivy image --severity HIGH,CRITICAL nginx:1.16   # vulnerable\nkubectl delete pod nginx-2 nginx-3 -n nato --force --grace-period=0")]},
+{id:36,title:"Default Deny Egress",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Create a NetworkPolicy named default-deny in testing namespace."),n("Block all egress from all pods. podSelector empty, policyTypes Egress.")],concepts:[n("policyTypes Egress with no egress rules means deny all outbound traffic."),n("This prevents data exfiltration and lateral movement from compromised pods."),n("DNS resolution on port 53 will also be blocked unless explicitly allowed."),n("NetworkPolicy requires a CNI that supports it like Calico or Cilium.")],solution:[n("Create the policy."),c("apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata: {name: default-deny, namespace: testing}\nspec:\n  podSelector: {}\n  policyTypes: [Egress]")]},
+{id:37,title:"SA Without Secret Access",difficulty:"Easy",domain:"Cluster Hardening",scenario:[n("Create ServiceAccount backend-qa in namespace qa."),n("Create Role no-secret-access allowing only get,list on pods, not secrets."),n("Bind the role and update Pod frontend to use this SA.")],concepts:[n("Principle of least privilege: only grant permissions a workload actually needs."),n("A Role allowing get,list on pods but not secrets limits data exposure."),n("Use kubectl auth can-i to verify permissions from a ServiceAccount's perspective.")],solution:[n("Create SA, Role, and RoleBinding."),c("kubectl create sa backend-qa -n qa\nkubectl create role no-secret-access -n qa --verb=get,list --resource=pods\nkubectl create rolebinding backend-qa-binding -n qa --role=no-secret-access --serviceaccount=qa:backend-qa"),n("Update the pod."),c("kubectl get pod frontend -n qa -o yaml > /tmp/frontend.yaml\n# Edit serviceAccountName: backend-qa\nkubectl delete pod frontend -n qa\nkubectl apply -f /tmp/frontend.yaml")]},
+{id:38,title:"Falco Monitor Pod",difficulty:"Medium",domain:"Runtime Security",scenario:[n("Write a Falco rule to detect sensitive file access in containers."),n("Monitor for reads/writes to /etc/shadow."),n("Identify and terminate the offending pod.")],concepts:[n("Falco rules combine conditions with output format strings."),n("fd.name targets specific file paths. container.id identifies which container triggered the alert."),n("On the exam, you may need to both write the rule AND act on its findings.")],solution:[n("Write the rule and find the offender."),c("- rule: detect shadow access\n  condition: (evt.is_open_read=true or evt.is_open_write=true) and fd.name=/etc/shadow and container\n  output: \"Shadow access by %proc.name in %container.id (%k8s.pod.name)\"\n  priority: WARNING"),n("Scale or delete the offending workload."),c("kubectl scale deploy <offender> --replicas=0")]},
+{id:39,title:"Audit Node PVC",difficulty:"Medium",domain:"Runtime Security",scenario:[n("Configure audit logging to capture node and PVC changes."),n("Log Node changes at RequestResponse and PVC changes at Request level."),n("Default everything else to Metadata.")],concepts:[n("Monitoring node and storage changes is important for detecting unauthorized infrastructure modifications."),n("Nodes are core API resources in the empty API group."),n("PersistentVolumeClaims can be restricted by namespace in the audit policy.")],solution:[n("Write the audit policy rules."),c("rules:\n  - level: RequestResponse\n    resources: [{group: \"\", resources: [\"nodes\"]}]\n  - level: Request\n    resources: [{group: \"\", resources: [\"persistentvolumeclaims\"]}]\n  - level: Metadata")]},
+{id:40,title:"Secrets: Retrieve & Mount",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Retrieve and decode existing secret values."),n("Create a new secret and mount it as a volume in a pod.")],concepts:[n("This is a common pattern: decode existing secrets, create new ones, mount as volumes."),n("Secrets mounted as volumes appear as files in the container, one file per key."),n("readOnly true prevents the container from modifying the mounted secrets.")],solution:[n("Decode, create, and mount."),c("kubectl get secret <name> -o jsonpath='{.data.key}' | base64 -d\nkubectl create secret generic newsecret --from-literal=key=value\n# Mount in pod spec:\nvolumeMounts: [{name: s, mountPath: /etc/secret, readOnly: true}]\nvolumes: [{name: s, secret: {secretName: newsecret}}]")]},
+{id:41,title:"Dockerfile Deployment Fixes",difficulty:"Easy",domain:"System Hardening",scenario:[n("Fix security issues in a Dockerfile and Deployment manifest."),n("Pin base image version, use non-root user."),n("Set non-root UID, disable privileged mode.")],concepts:[n("Same pattern as Q6 and Q50. Pin versions, drop root, drop privileges."),n("These combo questions are fast points if you know the five key fixes."),n("Do not add or remove fields. Only edit existing values.")],solution:[n("Apply the standard fixes."),c("# Dockerfile: pin FROM version, USER nobody\n# Deployment: runAsUser: 65535, privileged: false, readOnlyRootFilesystem: true")]},
+{id:42,title:"SA Naming Policy",difficulty:"Easy",domain:"Cluster Hardening",scenario:[n("Create ServiceAccounts with specific naming conventions."),n("Create Roles and RoleBindings following naming policy."),n("Verify permissions with kubectl auth can-i.")],concepts:[n("Consistent naming makes RBAC auditing easier."),n("ServiceAccount format for --as flag is system:serviceaccount:namespace:name."),n("Role names should describe what they grant, not who they're for.")],solution:[n("Create resources following naming convention."),c("kubectl create sa <sa-name> -n <namespace>\nkubectl create role <role-name> --verb=<verbs> --resource=<resources> -n <namespace>\nkubectl create rolebinding <binding-name> --role=<role-name> --serviceaccount=<ns>:<sa> -n <namespace>")]},
+{id:43,title:"PSP Restrict Volumes",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Write a PodSecurityPolicy manifest restricting allowed volume types."),n("Only allow configMap, emptyDir, projected, secret, downwardAPI, PVC.")],concepts:[n("PSP volume restrictions prevent pods from using dangerous volume types like hostPath."),n("hostPath volumes can access any file on the host, enabling container escape."),n("Even though PSP is deprecated, understanding volume restrictions maps to Pod Security Standards.")],solution:[n("Write the PSP manifest."),c("spec:\n  volumes:\n    - configMap\n    - emptyDir\n    - projected\n    - secret\n    - downwardAPI\n    - persistentVolumeClaim")]},
+{id:44,title:"SBOM Generation",difficulty:"Medium",domain:"Supply Chain",scenario:[n("Generate an SPDX SBOM with bom tool for kube-apiserver."),n("Generate a CycloneDX SBOM with trivy for kube-controller-manager."),n("Scan an existing SBOM for vulnerabilities with trivy sbom.")],concepts:[n("SBOM stands for Software Bill of Materials. It lists all packages in a container image."),n("Two standard formats: SPDX from Linux Foundation and CycloneDX from OWASP."),n("bom generates SPDX format. Trivy can generate both formats and also scan existing SBOMs."),n("trivy sbom scans an SBOM file without needing the container runtime.")],solution:[n("Generate and scan SBOMs."),c("bom generate -o /opt/candidate/13/sbom1.json --format json --image registry.k8s.io/kube-apiserver:v1.32.0\ntrivy image --format cyclonedx -o /opt/candidate/13/sbom2.json registry.k8s.io/kube-controller-manager:v1.32.0\ntrivy sbom /opt/candidate/13/sbom_check.json -o /opt/candidate/13/sbom_result.json")]},
+{id:45,title:"Role Restriction",difficulty:"Easy",domain:"Cluster Hardening",scenario:[n("Restrict overly-permissive Role test-role to only get on pods."),n("Create new Role test-role-2 allowing update on statefulsets."),n("Bind test-role-2 to ServiceAccount test-sa.")],concepts:[n("Use kubectl get rolebindings -o wide to trace SA to Role mappings."),n("statefulsets are in the apps apiGroup, not core."),n("A ServiceAccount can have multiple RoleBindings granting different permissions.")],solution:[n("Restrict and create."),c("kubectl edit role test-role -n database\n# rules: [{apiGroups: [\"\"], resources: [\"pods\"], verbs: [\"get\"]}]\nkubectl create role test-role-2 -n database --verb=update --resource=statefulsets.apps\nkubectl create rolebinding test-role-2-bind -n database --role=test-role-2 --serviceaccount=database:test-sa")]},
+{id:46,title:"Binary Integrity",difficulty:"Easy",domain:"Cluster Hardening",scenario:[n("Verify Kubernetes binaries against sha512 checksums."),n("Delete any binaries whose checksums do not match.")],concepts:[n("Always verify downloaded K8s binaries against official checksums to detect tampering."),n("sha512sum --check reads checksums from a file and validates each entry."),n("Tampered binaries could contain backdoors. This is quick exam points.")],solution:[n("Verify and clean up."),c("cd /opt/candidate/15/binaries/\nsha512sum --check ../checksums.txt\n# Delete any that show FAILED\nsha512sum --check ../checksums.txt 2>&1 | grep FAILED | awk -F: '{print $1}' | xargs rm")]},
+{id:47,title:"Pod Security Enforce",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Label namespace team-blue with pod-security enforce restricted."),n("Delete a pod from the privileged Deployment to trigger ReplicaSet failure."),n("Capture the FailedCreate events to a file.")],concepts:[n("Pod Security Admission only checks new pod creation. Existing pods are not affected."),n("That's why you delete a pod to trigger the ReplicaSet to try recreating it and fail."),n("The restricted profile forbids privileged, root, host namespaces, and unrestricted capabilities.")],solution:[n("Label, delete, and capture."),c("kubectl label ns team-blue pod-security.kubernetes.io/enforce=restricted\nPOD=$(kubectl get pods -n team-blue -l app=privileged-runner -o name | head -1)\nkubectl delete $POD -n team-blue\nkubectl describe rs -n team-blue -l app=privileged-runner > /opt/candidate/16/logs")]},
+{id:48,title:"Docker Socket SecurityContext",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Harden docker-admin Deployment in sandbox namespace."),n("Add runAsUser 65535, drop ALL capabilities, readOnlyRootFilesystem, no privilege escalation."),n("The docker.sock mount must remain.")],concepts:[n("If you cannot remove docker.sock, at least harden the container's securityContext."),n("This limits what an attacker can do even if they gain container access."),n("kubectl edit or kubectl patch both work for adding securityContext.")],solution:[n("Edit the deployment."),c("kubectl edit deployment docker-admin -n sandbox\n# Add securityContext:\n#   runAsUser: 65535\n#   runAsGroup: 65535\n#   readOnlyRootFilesystem: true\n#   allowPrivilegeEscalation: false\n#   capabilities: {drop: [ALL]}")]},
+{id:49,title:"SA Role for Deployments",difficulty:"Easy",domain:"Cluster Hardening",scenario:[n("Find the ServiceAccount used by nginx-pod in test-system namespace."),n("Create Role dev-test-role allowing list, get, watch on deployments."),n("Create RoleBinding dev-test-role-binding for the SA.")],concepts:[n("ServiceAccount name is at spec.serviceAccountName in the pod spec."),n("Use jsonpath to extract it: kubectl get pod -o jsonpath='{.spec.serviceAccountName}'."),n("For ServiceAccounts, the --serviceaccount flag format is namespace:name.")],solution:[n("Find SA and create RBAC."),c("kubectl get pod nginx-pod -n test-system -o jsonpath='{.spec.serviceAccountName}' > /candidate/sa-name.txt\nkubectl create role dev-test-role --verb=list,get,watch --resource=deployments -n test-system\nkubectl create rolebinding dev-test-role-binding --role=dev-test-role --serviceaccount=test-system:sa-dev-1 -n test-system")]},
+{id:50,title:"Dockerfile Kafka Fixes",difficulty:"Easy",domain:"System Hardening",scenario:[n("Fix Dockerfile: pin base image, use non-root user."),n("Fix Deployment: non-root UID, privileged false, readOnlyRootFilesystem true.")],concepts:[n("Same pattern as Q6 and Q41. Pin versions, drop root, drop privileges."),n("FROM latest is mutable. USER root means container escape gives host root."),n("readOnlyRootFilesystem prevents planting binaries. privileged false removes host capabilities.")],solution:[n("Apply fixes."),c("# Dockerfile:\nFROM ubuntu:latest -> FROM ubuntu:22.04\nUSER root -> USER nobody\n\n# Deployment:\nrunAsUser: 0 -> runAsUser: 65535\nprivileged: true -> privileged: false\nreadOnlyRootFilesystem: false -> true")]},
+{id:51,title:"SA Pod List",difficulty:"Easy",domain:"Cluster Hardening",scenario:[n("Create ServiceAccount backend-sa, Role pod-reader for list and get on pods."),n("Create RoleBinding and a Pod using the SA with bitnami/kubectl image.")],concepts:[n("This is a full RBAC chain: SA, Role, RoleBinding, Pod."),n("Using bitnami/kubectl image lets you test permissions from inside the pod."),n("kubectl exec <pod> -- kubectl get pods should succeed with the right RBAC.")],solution:[n("Create the full chain."),c("kubectl create sa backend-sa\nkubectl create role pod-reader --verb=list,get --resource=pods\nkubectl create rolebinding pod-reader-binding --role=pod-reader --serviceaccount=default:backend-sa"),c("apiVersion: v1\nkind: Pod\nmetadata: {name: backend-pod}\nspec:\n  serviceAccountName: backend-sa\n  containers:\n  - name: kubectl\n    image: bitnami/kubectl:latest\n    command: [\"sleep\", \"3600\"]")]},
+{id:52,title:"NetworkPolicy Port 80",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Create allow-np in staging namespace."),n("Apply to all pods, allow ingress from same namespace pods only, on TCP port 80.")],concepts:[n("podSelector empty in the from clause means any pod in the same namespace."),n("This is NOT the same as allowing all traffic. Other namespaces are still blocked."),n("Specifying port 80 with TCP means all other ports are denied.")],solution:[n("Create the policy."),c("apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata: {name: allow-np, namespace: staging}\nspec:\n  podSelector: {}\n  policyTypes: [Ingress]\n  ingress:\n  - from:\n    - podSelector: {}\n    ports:\n    - {protocol: TCP, port: 80}")]},
+{id:53,title:"PSP Prevent Privileged",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Write a multi-document YAML with PSP, ClusterRole, ServiceAccount, and ClusterRoleBinding."),n("PSP prevents privileged containers. ClusterRole uses the special use verb.")],concepts:[n("The ClusterRole needs verb use on podsecuritypolicies, not the usual get/list/watch."),n("Multi-document YAML uses --- as separator between resources."),n("Even though PSP is removed, the concepts map to Pod Security Admission.")],solution:[n("Write all resources."),c("# PodSecurityPolicy: prevent-privileged-policy\n#   privileged: false, allowPrivilegeEscalation: false\n#   volumes: [configMap, emptyDir, secret]\n# ClusterRole: prevent-role (verb: use on PSP)\n# ServiceAccount: psp-sa (namespace: default)\n# ClusterRoleBinding: prevent-role-binding")]},
+{id:54,title:"Deny All Ingress & Egress",difficulty:"Easy",domain:"Microservice Vulns",scenario:[n("Complete a skeleton NetworkPolicy at /home/policy/network-policy.yaml."),n("Name it deny-network in test namespace. Block all ingress and egress.")],concepts:[n("podSelector empty with policyTypes Ingress and Egress and no rules means deny all traffic in both directions."),n("This is the strongest isolation NetworkPolicy you can create."),n("Apply it then verify with kubectl describe to confirm the deny-all behavior.")],solution:[n("Complete and apply."),c("apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata: {name: deny-network, namespace: test}\nspec:\n  podSelector: {}\n  policyTypes: [Ingress, Egress]"),c("kubectl apply -f /home/policy/network-policy.yaml")]},
+];
+
+// ═══ STATE ══════════════════════════════════════════════════
+let currentExam = null;
+let currentTestNum = null;
+let currentQuestions = [];
 let currentIndex = 0;
 let ttsRate = 1.0;
 let currentUtterance = null;
@@ -753,327 +255,150 @@ let isPaused = false;
 let lineSpans = [];
 let lineIndex = 0;
 let stopped = true;
-let activeSection = null;
 
-// ── VOICE SELECTION ────────────────────────────────────────
-function findBestVoice() {
-  const voices = speechSynthesis.getVoices();
-  const edgeNeuralUS = voices.find(v =>
-    v.name.includes('Online') && v.name.includes('Natural') && v.lang === 'en-US'
-  );
-  if (edgeNeuralUS) return edgeNeuralUS;
-  const msOnlineUS = voices.find(v =>
-    v.name.includes('Microsoft') && v.name.includes('Online') && v.lang === 'en-US'
-  );
-  if (msOnlineUS) return msOnlineUS;
-  const anyUS = voices.find(v => v.lang === 'en-US');
-  if (anyUS) return anyUS;
-  return voices.find(v => v.lang.startsWith('en')) || voices[0];
-}
+// ═══ VOICE ══════════════════════════════════════════════════
+function findBestVoice(){const v=speechSynthesis.getVoices();return v.find(x=>x.name.includes('Online')&&x.name.includes('Natural')&&x.lang==='en-US')||v.find(x=>x.name.includes('Microsoft')&&x.name.includes('Online')&&x.lang==='en-US')||v.find(x=>x.lang==='en-US')||v.find(x=>x.lang.startsWith('en'))||v[0]}
+speechSynthesis.onvoiceschanged=()=>{preferredVoice=findBestVoice()};
+preferredVoice=findBestVoice();
 
-speechSynthesis.onvoiceschanged = () => { preferredVoice = findBestVoice(); };
-preferredVoice = findBestVoice();
-
-// ── TTS ENGINE ─────────────────────────────────────────────
-function stopTTS() {
-  stopped = true;
-  isPaused = false;
-  if (currentTtsCleanup) { currentTtsCleanup(); currentTtsCleanup = null; }
-  if (speechSynthesis.speaking || speechSynthesis.pending) {
-    speechSynthesis.cancel();
-  }
-  document.querySelectorAll('.tts-line-active').forEach(s => s.classList.remove('tts-line-active'));
-  const content = document.getElementById('content');
-  content.classList.remove('tts-reading');
-  updatePlayButton();
-  updateProgress();
-}
-
-function updatePlayButton() {
-  const btn = document.getElementById('btn-play');
-  if (stopped) {
-    btn.innerHTML = '&#9654; play';
-    btn.classList.remove('active');
-  } else if (isPaused) {
-    btn.innerHTML = '&#9654; resume';
-    btn.classList.remove('active');
-  } else {
-    btn.innerHTML = '&#10074;&#10074; pause';
-    btn.classList.add('active');
-  }
-}
-
-function updateProgress() {
-  const el = document.getElementById('line-progress');
-  if (lineSpans.length === 0) {
-    el.textContent = 'line 0/0';
-  } else {
-    el.textContent = `line ${Math.min(lineIndex + 1, lineSpans.length)}/${lineSpans.length}`;
-  }
-}
-
-function collectNarratableLines() {
-  const content = document.getElementById('content');
-  lineSpans = Array.from(content.querySelectorAll('.tts-line[data-type="narration"]'));
-}
-
-function startTTS(fromSection) {
-  stopTTS();
-  collectNarratableLines();
-  if (lineSpans.length === 0) return;
-
-  // If starting from a section, find the first narration line in that section
-  let startIdx = 0;
-  if (fromSection) {
-    const sectionEl = document.getElementById('section-' + fromSection);
-    if (sectionEl) {
-      const firstLine = sectionEl.querySelector('.tts-line[data-type="narration"]');
-      if (firstLine) {
-        startIdx = lineSpans.indexOf(firstLine);
-        if (startIdx === -1) startIdx = 0;
-      }
+// ═══ EXAM SELECTOR ══════════════════════════════════════════
+function buildMenu(){
+  const cards=document.getElementById('exam-cards');
+  cards.innerHTML='';
+  for(const[key,exam] of Object.entries(EXAMS)){
+    for(const[tNum,test] of Object.entries(exam.tests)){
+      const d=document.createElement('div');
+      d.className='exam-card';
+      d.onclick=()=>startExam(key,parseInt(tNum));
+      d.onmouseenter=()=>showCopyCmd(key,parseInt(tNum));
+      const qs=key==='CKA'?CKA_QUESTIONS:CKS_QUESTIONS;
+      const count=qs.filter(q=>q.id>=test.start&&q.id<=test.end).length;
+      d.innerHTML=`<h2>${exam.name}</h2><p>${test.label}</p><div class="count">${count} questions</div>`;
+      cards.appendChild(d);
     }
   }
-
-  lineIndex = startIdx;
-  stopped = false;
-  isPaused = false;
-
-  const content = document.getElementById('content');
-  content.classList.add('tts-reading');
-
-  currentTtsCleanup = () => {
-    stopped = true;
-    content.classList.remove('tts-reading');
-  };
-
-  updatePlayButton();
-  speakLine();
 }
 
-function speakLine() {
-  if (stopped || lineIndex >= lineSpans.length) {
-    lineSpans.forEach(s => s.classList.remove('tts-line-active'));
-    const content = document.getElementById('content');
-    content.classList.remove('tts-reading');
-    stopped = true;
-    updatePlayButton();
-    updateProgress();
-    return;
+function showCopyCmd(examKey, testNum){
+  const bar=document.getElementById('copy-bar');
+  const code=document.getElementById('copy-cmd');
+  const exam=EXAMS[examKey];
+  let cmd;
+  if(examKey==='CKA'){
+    cmd=`git clone https://github.com/${exam.repo}.git /tmp/CKA-PREP-2025 && cd /tmp/CKA-PREP-2025 && bash scripts/practice.sh`;
+  } else {
+    cmd=`git clone https://github.com/${exam.repo}.git /tmp/CKS-PREP-2025 && cd /tmp/CKS-PREP-2025 && bash scripts/setup-tools.sh && ./cks-prep --test ${testNum}`;
   }
+  code.textContent=cmd;
+  bar.style.display='flex';
+}
 
-  // Highlight current line
-  lineSpans.forEach(s => s.classList.remove('tts-line-active'));
+function copyCmd(){
+  const code=document.getElementById('copy-cmd').textContent;
+  navigator.clipboard.writeText(code).then(()=>{
+    const btn=document.querySelector('#copy-bar button');
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',1500);
+  });
+}
+
+function startExam(examKey, testNum){
+  currentExam=examKey;
+  currentTestNum=testNum;
+  const allQs=examKey==='CKA'?CKA_QUESTIONS:CKS_QUESTIONS;
+  const test=EXAMS[examKey].tests[testNum];
+  currentQuestions=allQs.filter(q=>q.id>=test.start&&q.id<=test.end);
+  currentIndex=0;
+  document.getElementById('exam-select').classList.add('hidden');
+  document.getElementById('guide-view').classList.add('active');
+  document.getElementById('exam-label').textContent=`${EXAMS[examKey].name} ${EXAMS[examKey].tests[testNum].label}`;
+  renderQuestion(currentIndex);
+}
+
+function backToMenu(){
+  stopTTS();
+  document.getElementById('guide-view').classList.remove('active');
+  document.getElementById('exam-select').classList.remove('hidden');
+}
+
+// ═══ TTS ENGINE ═════════════════════════════════════════════
+function stopTTS(){stopped=true;isPaused=false;if(currentTtsCleanup){currentTtsCleanup();currentTtsCleanup=null}if(speechSynthesis.speaking||speechSynthesis.pending)speechSynthesis.cancel();document.querySelectorAll('.tts-line-active').forEach(s=>s.classList.remove('tts-line-active'));document.getElementById('content').classList.remove('tts-reading');updatePlayButton();updateProgress()}
+function updatePlayButton(){const b=document.getElementById('btn-play');if(stopped){b.innerHTML='&#9654; play';b.classList.remove('active')}else if(isPaused){b.innerHTML='&#9654; resume';b.classList.remove('active')}else{b.innerHTML='&#10074;&#10074; pause';b.classList.add('active')}}
+function updateProgress(){const e=document.getElementById('line-progress');e.textContent=lineSpans.length?`line ${Math.min(lineIndex+1,lineSpans.length)}/${lineSpans.length}`:'line 0/0'}
+function collectNarratableLines(){lineSpans=Array.from(document.getElementById('content').querySelectorAll('.tts-line[data-type="narration"]'))}
+
+function startTTS(fromSection){
+  stopTTS();collectNarratableLines();if(!lineSpans.length)return;
+  let startIdx=0;
+  if(fromSection){const s=document.getElementById('section-'+fromSection);if(s){const f=s.querySelector('.tts-line[data-type="narration"]');if(f){startIdx=lineSpans.indexOf(f);if(startIdx===-1)startIdx=0}}}
+  lineIndex=startIdx;stopped=false;isPaused=false;
+  const content=document.getElementById('content');content.classList.add('tts-reading');
+  currentTtsCleanup=()=>{stopped=true;content.classList.remove('tts-reading')};
+  updatePlayButton();speakLine();
+}
+
+function speakLine(){
+  if(stopped||lineIndex>=lineSpans.length){lineSpans.forEach(s=>s.classList.remove('tts-line-active'));document.getElementById('content').classList.remove('tts-reading');stopped=true;updatePlayButton();updateProgress();return}
+  lineSpans.forEach(s=>s.classList.remove('tts-line-active'));
   lineSpans[lineIndex].classList.add('tts-line-active');
-
-  // Auto-scroll to active line
-  lineSpans[lineIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-  // Update section indicators
-  updateActiveSection();
-  updateProgress();
-
-  const text = lineSpans[lineIndex].textContent;
-  const utt = new SpeechSynthesisUtterance(text);
-  if (preferredVoice) utt.voice = preferredVoice;
-  utt.rate = ttsRate;
-  utt.pitch = 1.0;
-  currentUtterance = utt;
-
-  utt.onend = () => {
-    lineIndex++;
-    speakLine();
-  };
-
-  utt.onerror = (e) => {
-    if (e.error === 'canceled') return; // Normal cancellation
-    stopped = true;
-    lineSpans.forEach(s => s.classList.remove('tts-line-active'));
-    const content = document.getElementById('content');
-    content.classList.remove('tts-reading');
-    updatePlayButton();
-  };
-
-  speechSynthesis.speak(utt);
+  lineSpans[lineIndex].scrollIntoView({behavior:'smooth',block:'center'});
+  updateActiveSection();updateProgress();
+  const u=new SpeechSynthesisUtterance(lineSpans[lineIndex].textContent);
+  if(preferredVoice)u.voice=preferredVoice;u.rate=ttsRate;u.pitch=1.0;currentUtterance=u;
+  u.onend=()=>{lineIndex++;speakLine()};
+  u.onerror=(e)=>{if(e.error==='canceled')return;stopped=true;lineSpans.forEach(s=>s.classList.remove('tts-line-active'));document.getElementById('content').classList.remove('tts-reading');updatePlayButton()};
+  speechSynthesis.speak(u);
 }
 
-function togglePlay() {
-  if (stopped) {
-    startTTS(null);
-  } else if (isPaused) {
-    isPaused = false;
-    speechSynthesis.resume();
-    updatePlayButton();
-  } else {
-    isPaused = true;
-    speechSynthesis.pause();
-    updatePlayButton();
-  }
+function togglePlay(){if(stopped)startTTS(null);else if(isPaused){isPaused=false;speechSynthesis.resume();updatePlayButton()}else{isPaused=true;speechSynthesis.pause();updatePlayButton()}}
+function updateActiveSection(){if(lineIndex>=lineSpans.length)return;const s=lineSpans[lineIndex].closest('[data-section]');if(s){document.querySelectorAll('.section-btn').forEach(b=>b.classList.remove('active'));const btn=document.getElementById('sec-'+s.dataset.section);if(btn)btn.classList.add('active')}}
+
+// ═══ RENDER ═════════════════════════════════════════════════
+function renderQuestion(idx){
+  stopTTS();const q=currentQuestions[idx];const content=document.getElementById('content');
+  const info=document.getElementById('question-info');
+  const bc=q.difficulty==='Easy'?'badge-easy':q.difficulty==='Medium'?'badge-medium':'badge-hard';
+  let domainBadge=q.domain?` <span class="badge badge-domain">${q.domain}</span>`:'';
+  info.innerHTML=`<span class="q-num">Q${q.id}/${currentQuestions[currentQuestions.length-1].id}</span>: <span class="q-title">${esc(q.title)}</span> <span class="badge ${bc}">${q.difficulty}</span>${domainBadge}`;
+  document.getElementById('btn-prev').disabled=idx===0;
+  document.getElementById('btn-next').disabled=idx===currentQuestions.length-1;
+  let h='';
+  h+=`<div id="section-scenario" data-section="scenario"><div class="section-header">Scenario</div>`;
+  q.scenario.forEach(i=>{h+=i.type==='narration'?`<span class="tts-line" data-type="narration">${esc(i.text)}</span>`:`<pre class="code-block">${esc(i.text)}</pre>`});h+='</div>';
+  h+=`<div id="section-concepts" data-section="concepts"><div class="section-header">Concepts</div>`;
+  q.concepts.forEach(i=>{h+=i.type==='narration'?`<span class="tts-line" data-type="narration">${esc(i.text)}</span>`:`<pre class="code-block">${esc(i.text)}</pre>`});h+='</div>';
+  h+=`<div id="section-solution" data-section="solution"><div class="section-header">Solution Walkthrough</div>`;
+  q.solution.forEach(i=>{h+=i.type==='narration'?`<span class="tts-line" data-type="narration">${esc(i.text)}</span>`:`<pre class="code-block">${esc(i.text)}</pre>`});h+='</div>';
+  content.innerHTML=h;content.scrollTop=0;
+  document.querySelectorAll('.section-btn').forEach(b=>b.classList.remove('active'));
+  collectNarratableLines();updateProgress();
 }
 
-function updateActiveSection() {
-  if (lineIndex >= lineSpans.length) return;
-  const activeLine = lineSpans[lineIndex];
-  const section = activeLine.closest('[data-section]');
-  if (section) {
-    const name = section.dataset.section;
-    document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
-    const btn = document.getElementById('sec-' + name);
-    if (btn) btn.classList.add('active');
-  }
-}
+function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML}
 
-// ── RENDER ─────────────────────────────────────────────────
-function renderQuestion(idx) {
-  stopTTS();
-  const q = QUESTIONS[idx];
-  const content = document.getElementById('content');
+// ═══ NAV ════════════════════════════════════════════════════
+function nextQuestion(){if(currentIndex<currentQuestions.length-1){currentIndex++;renderQuestion(currentIndex)}}
+function prevQuestion(){if(currentIndex>0){currentIndex--;renderQuestion(currentIndex)}}
+function jumpSection(name){const el=document.getElementById('section-'+name);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});if(!stopped)startTTS(name)}
+function setSpeed(r){ttsRate=r;document.querySelectorAll('.speed-btn').forEach(b=>b.classList.toggle('active',parseFloat(b.textContent)===r));if(!stopped&&!isPaused){const ci=lineIndex;speechSynthesis.cancel();lineIndex=ci;speakLine()}}
 
-  // Update header
-  const info = document.getElementById('question-info');
-  const badgeClass = q.difficulty === 'Easy' ? 'badge-easy' : q.difficulty === 'Medium' ? 'badge-medium' : 'badge-hard';
-  info.innerHTML = `<span class="q-num">Q${q.id}/17</span>: <span class="q-title">${q.title}</span> <span class="badge ${badgeClass}">${q.difficulty}</span>`;
-
-  // Update nav buttons
-  document.getElementById('btn-prev').disabled = idx === 0;
-  document.getElementById('btn-next').disabled = idx === QUESTIONS.length - 1;
-
-  // Build content
-  let html = '';
-
-  // Scenario
-  html += `<div id="section-scenario" data-section="scenario">`;
-  html += `<div class="section-header">Scenario</div>`;
-  q.scenario.forEach(item => {
-    if (item.type === 'narration') {
-      html += `<span class="tts-line" data-type="narration">${escapeHtml(item.text)}</span>`;
-    } else {
-      html += `<pre class="code-block">${escapeHtml(item.text)}</pre>`;
-    }
-  });
-  html += `</div>`;
-
-  // Concepts
-  html += `<div id="section-concepts" data-section="concepts">`;
-  html += `<div class="section-header">Concepts</div>`;
-  q.concepts.forEach(item => {
-    if (item.type === 'narration') {
-      html += `<span class="tts-line" data-type="narration">${escapeHtml(item.text)}</span>`;
-    } else {
-      html += `<pre class="code-block">${escapeHtml(item.text)}</pre>`;
-    }
-  });
-  html += `</div>`;
-
-  // Solution
-  html += `<div id="section-solution" data-section="solution">`;
-  html += `<div class="section-header">Solution Walkthrough</div>`;
-  q.solution.forEach(item => {
-    if (item.type === 'narration') {
-      html += `<span class="tts-line" data-type="narration">${escapeHtml(item.text)}</span>`;
-    } else {
-      html += `<pre class="code-block">${escapeHtml(item.text)}</pre>`;
-    }
-  });
-  html += `</div>`;
-
-  content.innerHTML = html;
-  content.scrollTop = 0;
-
-  // Reset section buttons
-  document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
-
-  // Collect lines for progress
-  collectNarratableLines();
-  updateProgress();
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-// ── NAVIGATION ─────────────────────────────────────────────
-function nextQuestion() {
-  if (currentIndex < QUESTIONS.length - 1) {
-    currentIndex++;
-    renderQuestion(currentIndex);
-  }
-}
-
-function prevQuestion() {
-  if (currentIndex > 0) {
-    currentIndex--;
-    renderQuestion(currentIndex);
-  }
-}
-
-function jumpSection(name) {
-  const el = document.getElementById('section-' + name);
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-  // If TTS is playing, restart from this section
-  if (!stopped) {
-    startTTS(name);
-  }
-}
-
-// ── SPEED CONTROLS ─────────────────────────────────────────
-function setSpeed(rate) {
-  ttsRate = rate;
-  document.querySelectorAll('.speed-btn').forEach(b => {
-    b.classList.toggle('active', parseFloat(b.textContent) === rate);
-  });
-  // If currently speaking, restart current line at new speed
-  if (!stopped && !isPaused) {
-    const currentLineIdx = lineIndex;
-    speechSynthesis.cancel();
-    lineIndex = currentLineIdx;
-    speakLine();
-  }
-}
-
-// ── KEYBOARD SHORTCUTS ────────────────────────────────────
-document.addEventListener('keydown', (e) => {
-  // Don't capture if user is in an input
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-  switch (e.key) {
-    case ' ':
-      e.preventDefault();
-      togglePlay();
-      break;
-    case 'ArrowRight':
-      e.preventDefault();
-      nextQuestion();
-      break;
-    case 'ArrowLeft':
-      e.preventDefault();
-      prevQuestion();
-      break;
-    case 'Escape':
-      e.preventDefault();
-      stopTTS();
-      break;
-    case '1':
-      e.preventDefault();
-      jumpSection('scenario');
-      break;
-    case '2':
-      e.preventDefault();
-      jumpSection('concepts');
-      break;
-    case '3':
-      e.preventDefault();
-      jumpSection('solution');
-      break;
+// ═══ KEYBOARD ═══════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  if(!document.getElementById('guide-view').classList.contains('active'))return;
+  switch(e.key){
+    case ' ':e.preventDefault();togglePlay();break;
+    case 'ArrowRight':e.preventDefault();nextQuestion();break;
+    case 'ArrowLeft':e.preventDefault();prevQuestion();break;
+    case 'Escape':e.preventDefault();stopTTS();break;
+    case '1':e.preventDefault();jumpSection('scenario');break;
+    case '2':e.preventDefault();jumpSection('concepts');break;
+    case '3':e.preventDefault();jumpSection('solution');break;
   }
 });
 
-// ── INIT ───────────────────────────────────────────────────
-renderQuestion(0);
+// ═══ INIT ═══════════════════════════════════════════════════
+buildMenu();
 </script>
 </body>
 </html>
