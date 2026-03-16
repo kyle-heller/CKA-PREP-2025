@@ -178,12 +178,12 @@ run_setup() {
 
   echo ""
   hr
-  printf "${GREEN}${BOLD}  All 17 labs are ready!${RESET}\n"
-  printf "${DIM}  Note: API server is intentionally broken (Q15).${RESET}\n"
-  printf "${DIM}  When you reach Q15, fix it to restore the cluster.${RESET}\n"
+  printf "\n${RED}${BOLD}  ⚠  API server is now DOWN (Q15 broke it on purpose).${RESET}\n"
+  printf "${BOLD}  You must fix it first before any other questions will work.${RESET}\n"
+  printf "${DIM}  Starting you on Q15 — fix the etcd port, then we continue to Q1.${RESET}\n"
   hr
   echo ""
-  read -rp "  Press Enter to begin practicing... "
+  read -rp "  Press Enter to start with Q15 (Etcd Fix)... "
 }
 
 # ── Show Question ───────────────────────────────────────────
@@ -385,8 +385,18 @@ question_menu() {
         read -rp "  Press Enter to continue... "
         ;;
       n|N)
+        if [ $idx -eq 14 ] && [ "${RESULTS[14]}" = "" ] || [ "${RESULTS[14]}" = "pass" ]; then
+          # After Q15 (idx 14), go to Q1 (idx 0) — the natural starting point
+          # once the API server is fixed
+          if [ $idx -eq 14 ]; then
+            return 0
+          fi
+        fi
         if [ $idx -lt 16 ]; then
-          return $((idx + 1))
+          local next_idx=$((idx + 1))
+          # Skip Q15 in normal sequence (already done first)
+          [ $next_idx -eq 14 ] && next_idx=15
+          return $next_idx
         else
           printf "\n  ${DIM}Already at the last question.${RESET}\n"
           read -rp "  Press Enter to continue... "
@@ -442,10 +452,16 @@ main() {
     read -rp "  Press Enter to begin... "
   fi
 
-  # Practice loop
-  local current_idx=$((START_Q - 1))
-  if [ $current_idx -lt 0 ]; then current_idx=0; fi
-  if [ $current_idx -gt 16 ]; then current_idx=16; fi
+  # After setup, start on Q15 (etcd fix) since API server is broken
+  # User must fix it before anything else works
+  local current_idx
+  if ! $SKIP_SETUP; then
+    current_idx=14  # index 14 = Q15
+  else
+    current_idx=$((START_Q - 1))
+    if [ $current_idx -lt 0 ]; then current_idx=0; fi
+    if [ $current_idx -gt 16 ]; then current_idx=16; fi
+  fi
 
   while true; do
     question_menu "$current_idx"
