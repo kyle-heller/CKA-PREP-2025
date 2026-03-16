@@ -307,7 +307,14 @@ function startExam(examKey, testNum){
   currentTestNum=testNum;
   const allQs=examKey==='CKA'?CKA_QUESTIONS:CKS_QUESTIONS;
   const test=EXAMS[examKey].tests[testNum];
-  currentQuestions=allQs.filter(q=>q.id>=test.start&&q.id<=test.end);
+  let filtered=allQs.filter(q=>q.id>=test.start&&q.id<=test.end);
+  // CKA: Q15 (etcd fix) must come first — setup breaks the API server,
+  // so you need to fix it before anything else works
+  if(examKey==='CKA'){
+    const q15idx=filtered.findIndex(q=>q.id===15);
+    if(q15idx>0){const q15=filtered.splice(q15idx,1)[0];filtered.unshift(q15)}
+  }
+  currentQuestions=filtered;
   currentIndex=0;
   document.getElementById('exam-select').classList.add('hidden');
   document.getElementById('guide-view').classList.add('active');
@@ -359,7 +366,7 @@ function renderQuestion(idx){
   const info=document.getElementById('question-info');
   const bc=q.difficulty==='Easy'?'badge-easy':q.difficulty==='Medium'?'badge-medium':'badge-hard';
   let domainBadge=q.domain?` <span class="badge badge-domain">${q.domain}</span>`:'';
-  info.innerHTML=`<span class="q-num">Q${q.id}/${currentQuestions[currentQuestions.length-1].id}</span>: <span class="q-title">${esc(q.title)}</span> <span class="badge ${bc}">${q.difficulty}</span>${domainBadge}`;
+  info.innerHTML=`<span class="q-num">${idx+1}/${currentQuestions.length}</span> Q${q.id}: <span class="q-title">${esc(q.title)}</span> <span class="badge ${bc}">${q.difficulty}</span>${domainBadge}`;
   document.getElementById('btn-prev').disabled=idx===0;
   document.getElementById('btn-next').disabled=idx===currentQuestions.length-1;
   let h='';
